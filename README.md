@@ -13,7 +13,7 @@ Implement a Java/OSGi bundle for Eclipse Smart Home/openHAB, which exposes inter
 ### Development environment
 * Setting up the openHAB IDE https://www.openhab.org/docs/developer/development/ide.html#prerequisites
 
-### Documentation
+### Resources
 * Documentation of prometheus' data format https://prometheus.io/docs/concepts/metric_types/
 * Developing Bindings https://www.eclipse.org/smarthome/documentation/development/bindings/how-to.html
 * Java library for prometheus https://github.com/prometheus/client_java
