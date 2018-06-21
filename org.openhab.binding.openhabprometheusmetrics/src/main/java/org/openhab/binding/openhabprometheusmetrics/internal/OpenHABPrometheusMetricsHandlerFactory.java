@@ -12,14 +12,13 @@
  */
 package org.openhab.binding.openhabprometheusmetrics.internal;
 
-import static org.openhab.binding.openhabprometheusmetrics.internal.OpenHABPrometheusMetricsBindingConstants.*;
+import static org.openhab.binding.openhabprometheusmetrics.internal.OpenHABPrometheusMetricsBindingConstants.THING_TYPE_CURRENCY;
 
 import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.binding.openhabprometheusmetrics.internal.OpenHABPrometheusMetricsHandler;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
@@ -37,7 +36,7 @@ import org.osgi.service.component.annotations.Component;
 @Component(configurationPid = "binding.openhabprometheusmetrics", service = ThingHandlerFactory.class)
 public class OpenHABPrometheusMetricsHandlerFactory extends BaseThingHandlerFactory {
 
-    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_SAMPLE);
+    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_CURRENCY);
 
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
@@ -48,7 +47,7 @@ public class OpenHABPrometheusMetricsHandlerFactory extends BaseThingHandlerFact
     protected @Nullable ThingHandler createHandler(Thing thing) {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
-        if (THING_TYPE_SAMPLE.equals(thingTypeUID)) {
+        if (THING_TYPE_CURRENCY.equals(thingTypeUID)) {
             return new OpenHABPrometheusMetricsHandler(thing);
         }
 

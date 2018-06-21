@@ -5,12 +5,12 @@
 	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
 	<!-- Sample Thing Type -->
-	<thing-type id="sample">
-		<label>OpenHABPrometheusMetrics Binding Thing</label>
-		<description>Sample thing for OpenHABPrometheusMetrics Binding</description>
+	<thing-type id="currency">
+		<label>OpenHAB Prometheus Metrics Binding Thing</label>
+		<description>Currency thing for OpenHAB Prometheus Metrics Binding</description>
 
 		<channels>
-			<channel id="channel1" typeId="sample-channel" />
+			<channel id="currency_channel" typeId="currency_type_channel" />
 		</channels>
 
 		<config-description>
@@ -23,10 +23,10 @@
 	</thing-type>
 
 	<!-- Sample Channel Type -->
-	<channel-type id="sample-channel">
+	<channel-type id="currency_type_channel">
 		<item-type>openhabprometheusmetricsItem</item-type>
-		<label>OpenHABPrometheusMetrics Binding Channel</label>
-		<description>Sample channel for OpenHABPrometheusMetrics Binding</description>
+		<label>OpenHAB Prometheus Metrics Binding Channel</label>
+		<description>Currency channel for OpenHAB Prometheus Metrics Binding</description>
 	</channel-type>
 
 </thing:thing-descriptions>

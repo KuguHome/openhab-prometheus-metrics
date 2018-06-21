@@ -8,8 +8,14 @@ Bundle-SymbolicName: org.openhab.binding.openhabprometheusmetrics;singleton:=tru
 Bundle-Vendor: openHAB
 Bundle-Version: 2.4.0.qualifier
 Import-Package: 
+ io.swagger.annotations;version="1.5.7.SNAPSHOT",
+ io.swagger.models;version="1.5.7.SNAPSHOT",
+ javax.annotation.security;version="1.2.0",
+ javax.ws.rs;version="2.0.1",
+ javax.ws.rs.core;version="2.0.1",
  org.eclipse.jdt.annotation;resolution:=optional,
  org.eclipse.smarthome.config.core,
+ org.eclipse.smarthome.core.auth,
  org.eclipse.smarthome.core.library.types,
  org.eclipse.smarthome.core.thing,
  org.eclipse.smarthome.core.thing.binding,
@@ -17,5 +23,10 @@ Import-Package:
  org.eclipse.smarthome.core.thing.type,
  org.eclipse.smarthome.core.types,
  org.eclipse.smarthome.core.util,
+ org.eclipse.smarthome.io.rest,
+ org.junit;version="4.12.0";resolution:=optional,
+ org.openhab.ui.dashboard,
+ org.osgi.service.http;version="1.2.1",
  org.slf4j
 Service-Component: OSGI-INF/*.xml
+Require-Bundle: org.eclipse.smarthome.io.net
