@@ -10,7 +10,7 @@ public class NodePromFileMetricsProvider implements MetricsProvider<MetricItem> 
 
     private static final String PROPERTIES_DELIMETER = " ";
     private static final String COMMENTED_PREFIX = "#";
-    private static final String FILE_NAME = "node.prom.txt";
+    private static final String FILE_NAME = "/home/ronx/Projects/kugu/openhab-prometheus-metrics/org.openhab.binding.openhabprometheusmetrics/src/main/resources/node.prom.txt";
 
     @Override
     public Stream<MetricItem> getMetrics() throws Exception {

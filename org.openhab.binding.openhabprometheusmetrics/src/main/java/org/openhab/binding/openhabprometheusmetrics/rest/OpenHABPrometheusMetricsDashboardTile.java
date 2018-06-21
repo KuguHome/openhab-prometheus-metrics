@@ -24,7 +24,7 @@ public class OpenHABPrometheusMetricsDashboardTile implements DashboardTile {
 
     @Override
     public String getName() {
-        return "metrics";
+        return "Metrics";
     }
 
     @Override
