@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/simpleclient-0.4.0.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: Metrics
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -11,6 +12,8 @@ Import-Package:
  io.swagger.annotations;version="1.5.7.SNAPSHOT",
  io.swagger.models;version="1.5.7.SNAPSHOT",
  javax.annotation.security;version="1.2.0",
+ javax.servlet;version="3.1.0",
+ javax.servlet.http;version="3.1.0",
  javax.ws.rs;version="2.0.1",
  javax.ws.rs.core;version="2.0.1",
  org.eclipse.jdt.annotation;resolution:=optional,

@@ -12,9 +12,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -80,6 +83,27 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
         NodeFileReader reader = new NodeFileReader();
 
         return Response.ok(reader.read(fileName).collect(Collectors.joining("\n"))).build();
+    }
+
+    @GET
+    @RolesAllowed({ Role.USER, Role.ADMIN })
+    @Path("/prometheus")
+    @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Gets metrics info as for Prometheus")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class),
+            @ApiResponse(code = 404, message = "Unknown page") })
+    public Response getMetricsPrometheus(@Context HttpServletRequest request, @Context HttpServletResponse response)
+            throws Exception {
+
+        logger.info("Prometheus scrape started.");
+        /*
+         * try (Writer writer = response.getWriter()) {
+         * writer.write("openhab_bundle_state{bundle=\"org.openhab.binding.openhabprometheusmetrics\"} Resolved");
+         * writer.flush();
+         * }
+         */
+        return Response.ok("openhab_bundle_state{bundle=\"org.openhab.binding.openhabprometheusmetrics\"} Resolved")
+                .build();
     }
 
 }
