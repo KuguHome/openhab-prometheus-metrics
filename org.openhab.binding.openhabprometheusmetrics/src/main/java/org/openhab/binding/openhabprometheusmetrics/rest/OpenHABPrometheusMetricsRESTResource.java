@@ -22,12 +22,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.smarthome.core.auth.Role;
+import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.io.rest.RESTResource;
 import org.eclipse.smarthome.io.rest.Stream2JSONInputStream;
 import org.openhab.binding.openhabprometheusmetrics.data.MetricItem;
 import org.openhab.binding.openhabprometheusmetrics.data.MetricsProvider;
 import org.openhab.binding.openhabprometheusmetrics.data.NodePromFileMetricsProvider;
+import org.openhab.binding.openhabprometheusmetrics.internal.OpenHABPrometheusMetricsThingManager;
 import org.openhab.binding.openhabprometheusmetrics.util.NodeFileReader;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,9 +48,12 @@ import io.swagger.annotations.ApiResponses;
  */
 @Path(OpenHABPrometheusMetricsRESTResource.PATH_HABMETRICS)
 @Api(OpenHABPrometheusMetricsRESTResource.PATH_HABMETRICS)
+@Component
 public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
 
     private final Logger logger = LoggerFactory.getLogger(OpenHABPrometheusMetricsRESTResource.class);
+
+    private OpenHABPrometheusMetricsThingManager thingManager;
 
     public static final String PATH_HABMETRICS = "metrics";
 
@@ -96,6 +103,11 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
             throws Exception {
 
         logger.info("Prometheus scrape started.");
+
+        for (Thing thing : thingManager.getThingSet()) {
+            logger.debug("Thing '{}' with status '{}'", thing.getUID().getAsString(), thing.getStatus().name());
+        }
+
         /*
          * try (Writer writer = response.getWriter()) {
          * writer.write("openhab_bundle_state{bundle=\"org.openhab.binding.openhabprometheusmetrics\"} Resolved");
@@ -104,6 +116,15 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
          */
         return Response.ok("openhab_bundle_state{bundle=\"org.openhab.binding.openhabprometheusmetrics\"} Resolved")
                 .build();
+    }
+
+    @Reference
+    public void setThingManager(OpenHABPrometheusMetricsThingManager thingManager) {
+        this.thingManager = thingManager;
+    }
+
+    public void unsetThingManager(OpenHABPrometheusMetricsThingManager thingManager) {
+        this.thingManager = null;
     }
 
 }

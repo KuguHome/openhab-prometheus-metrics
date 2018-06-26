@@ -9,6 +9,8 @@
 package org.openhab.binding.openhabprometheusmetrics.rest;
 
 import org.openhab.ui.dashboard.DashboardTile;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
  * @author Roman Malyugin
  *
  */
+@Component
 public class OpenHABPrometheusMetricsDashboardTile implements DashboardTile {
 
     @Override
@@ -62,6 +65,7 @@ public class OpenHABPrometheusMetricsDashboardTile implements DashboardTile {
         logger.info("Stopped Metrics");
     }
 
+    @Reference
     protected void setHttpService(HttpService httpService) {
         this.httpService = httpService;
     }
