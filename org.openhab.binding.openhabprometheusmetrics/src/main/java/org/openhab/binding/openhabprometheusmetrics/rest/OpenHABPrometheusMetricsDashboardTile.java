@@ -8,6 +8,7 @@
  */
 package org.openhab.binding.openhabprometheusmetrics.rest;
 
+import org.openhab.binding.openhabprometheusmetrics.internal.OpenHABPrometheusMetricsThingManager;
 import org.openhab.ui.dashboard.DashboardTile;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -50,6 +51,7 @@ public class OpenHABPrometheusMetricsDashboardTile implements DashboardTile {
     private static final Logger logger = LoggerFactory.getLogger(OpenHABPrometheusMetricsDashboardTile.class);
 
     protected HttpService httpService;
+    // private OpenHABPrometheusMetricsThingManager thingManager;
 
     protected void activate() {
         try {
@@ -72,6 +74,15 @@ public class OpenHABPrometheusMetricsDashboardTile implements DashboardTile {
 
     protected void unsetHttpService(HttpService httpService) {
         this.httpService = null;
+    }
+
+    // @Reference
+    public void setThingManager(OpenHABPrometheusMetricsThingManager thingManager) {
+        // this.thingManager = thingManager;
+    }
+
+    public void unsetThingManager(OpenHABPrometheusMetricsThingManager thingManager) {
+        // this.thingManager = null;
     }
 
 }

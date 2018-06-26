@@ -23,12 +23,13 @@ import javax.ws.rs.core.Response;
 
 import org.eclipse.smarthome.core.auth.Role;
 import org.eclipse.smarthome.core.thing.Thing;
+import org.eclipse.smarthome.core.thing.ThingRegistry;
+import org.eclipse.smarthome.core.thing.internal.ThingRegistryImpl;
 import org.eclipse.smarthome.io.rest.RESTResource;
 import org.eclipse.smarthome.io.rest.Stream2JSONInputStream;
 import org.openhab.binding.openhabprometheusmetrics.data.MetricItem;
 import org.openhab.binding.openhabprometheusmetrics.data.MetricsProvider;
 import org.openhab.binding.openhabprometheusmetrics.data.NodePromFileMetricsProvider;
-import org.openhab.binding.openhabprometheusmetrics.internal.OpenHABPrometheusMetricsThingManager;
 import org.openhab.binding.openhabprometheusmetrics.util.NodeFileReader;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -53,7 +54,8 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
 
     private final Logger logger = LoggerFactory.getLogger(OpenHABPrometheusMetricsRESTResource.class);
 
-    private OpenHABPrometheusMetricsThingManager thingManager;
+    // private OpenHABPrometheusMetricsThingManager thingManager;
+    private ThingRegistryImpl thingRegistry;
 
     public static final String PATH_HABMETRICS = "metrics";
 
@@ -104,9 +106,14 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
 
         logger.info("Prometheus scrape started.");
 
-        for (Thing thing : thingManager.getThingSet()) {
+        for (Thing thing : thingRegistry.getAll()) {
             logger.debug("Thing '{}' with status '{}'", thing.getUID().getAsString(), thing.getStatus().name());
         }
+        /*
+         * for (Thing thing : thingManager.getThingSet()) {
+         * logger.debug("Thing '{}' with status '{}'", thing.getUID().getAsString(), thing.getStatus().name());
+         * }
+         */
 
         /*
          * try (Writer writer = response.getWriter()) {
@@ -118,13 +125,23 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
                 .build();
     }
 
+    /*
+     * @Reference
+     * public void setThingManager(OpenHABPrometheusMetricsThingManager thingManager) {
+     * this.thingManager = thingManager;
+     * }
+     *
+     * public void unsetThingManager(OpenHABPrometheusMetricsThingManager thingManager) {
+     * this.thingManager = null;
+     * }
+     */
     @Reference
-    public void setThingManager(OpenHABPrometheusMetricsThingManager thingManager) {
-        this.thingManager = thingManager;
+    protected void setThingRegistry(ThingRegistry thingRegistry) {
+        this.thingRegistry = (ThingRegistryImpl) thingRegistry;
     }
 
-    public void unsetThingManager(OpenHABPrometheusMetricsThingManager thingManager) {
-        this.thingManager = null;
+    protected void unsetThingRegistry(ThingRegistry thingRegistry) {
+        this.thingRegistry = null;
     }
 
 }

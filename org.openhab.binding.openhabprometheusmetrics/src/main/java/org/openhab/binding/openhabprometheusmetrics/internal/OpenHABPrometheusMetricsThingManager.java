@@ -11,11 +11,8 @@ import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.internal.ThingRegistryImpl;
 import org.eclipse.smarthome.core.thing.internal.ThingTracker;
 import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
-@Component(immediate = true)
+//@Component(immediate = true)
 public class OpenHABPrometheusMetricsThingManager implements ThingTracker {
 
     // private ThingManager thingManager;
@@ -47,13 +44,13 @@ public class OpenHABPrometheusMetricsThingManager implements ThingTracker {
         thingsPool.put(thing.getUID(), thing);
     }
 
-    @Activate
+    // @Activate
     protected synchronized void activate(ComponentContext componentContext) {
         // super.activate(componentContext);
         thingRegistry.addThingTracker(this);
     }
 
-    @Reference
+    // @Reference
     protected void setThingRegistry(ThingRegistry thingRegistry) {
         this.thingRegistry = (ThingRegistryImpl) thingRegistry;
     }
