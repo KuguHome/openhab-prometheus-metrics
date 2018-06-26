@@ -12,6 +12,8 @@
  */
 package org.openhab.binding.openhabprometheusmetrics.internal;
 
+import static org.openhab.binding.openhabprometheusmetrics.internal.OpenHABPrometheusMetricsBindingConstants.CHANNEL_1;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -42,7 +44,7 @@ public class OpenHABPrometheusMetricsHandler extends BaseThingHandler {
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        if (channelUID.getId().equals(OpenHABPrometheusMetricsBindingConstants.CHANNEL_CURRENCY)) {
+        if (channelUID.getId().equals(CHANNEL_1)) {
             // TODO: handle command
 
             // Note: if communication with thing fails for some reason,

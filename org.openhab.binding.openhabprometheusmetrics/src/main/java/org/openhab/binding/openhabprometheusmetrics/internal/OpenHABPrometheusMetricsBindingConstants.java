@@ -27,9 +27,8 @@ public class OpenHABPrometheusMetricsBindingConstants {
     private static final String BINDING_ID = "openhabprometheusmetrics";
 
     // List of all Thing Type UIDs
-    public static final ThingTypeUID THING_TYPE_CURRENCY = new ThingTypeUID(BINDING_ID, "currency");
+    public static final ThingTypeUID THING_TYPE_SAMPLE = new ThingTypeUID(BINDING_ID, "sample");
 
     // List of all Channel ids
-    public static final String CHANNEL_CURRENCY = "currency_channel";
-
+    public static final String CHANNEL_1 = "channel1";
 }

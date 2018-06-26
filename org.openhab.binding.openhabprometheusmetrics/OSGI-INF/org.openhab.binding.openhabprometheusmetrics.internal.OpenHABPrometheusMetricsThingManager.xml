@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" immediate="true" name="org.openhab.binding.openhabprometheusmetrics.internal.OpenHABPrometheusMetricsThingManager">
+   <reference bind="setThingRegistry" interface="org.eclipse.smarthome.core.thing.ThingRegistry" name="ThingRegistry" unbind="unsetThingRegistry"/>
+   <implementation class="org.openhab.binding.openhabprometheusmetrics.internal.OpenHABPrometheusMetricsThingManager"/>
+</scr:component>
