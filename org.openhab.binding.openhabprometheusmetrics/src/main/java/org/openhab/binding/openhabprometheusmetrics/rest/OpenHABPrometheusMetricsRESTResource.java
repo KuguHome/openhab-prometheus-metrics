@@ -30,6 +30,8 @@ import org.openhab.binding.openhabprometheusmetrics.data.MetricItem;
 import org.openhab.binding.openhabprometheusmetrics.data.MetricsProvider;
 import org.openhab.binding.openhabprometheusmetrics.data.NodePromFileMetricsProvider;
 import org.openhab.binding.openhabprometheusmetrics.util.NodeFileReader;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -108,6 +110,35 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
         for (Thing thing : thingRegistry.getAll()) {
             logger.debug("Thing '{}' with status '{}'", thing.getUID().getAsString(), thing.getStatus().name());
         }
+
+        Bundle[] bundles = FrameworkUtil.getBundle(OpenHABPrometheusMetricsRESTResource.class).getBundleContext()
+                .getBundles();
+
+        for (Bundle bundle : bundles) {
+            switch (bundle.getState()) {
+                case Bundle.ACTIVE:
+                    logger.debug("Bundle '{}' status ACTIVE", bundle.getSymbolicName());
+                    break;
+                case Bundle.INSTALLED:
+                    logger.debug("Bundle '{}' status INSTALLED", bundle.getSymbolicName());
+                    break;
+                case Bundle.RESOLVED:
+                    logger.debug("Bundle '{}' status RESOLVED", bundle.getSymbolicName());
+                    break;
+                case Bundle.STARTING:
+                    logger.debug("Bundle '{}' status STARTING", bundle.getSymbolicName());
+                    break;
+                case Bundle.STOPPING:
+                    logger.debug("Bundle '{}' status STOPPING", bundle.getSymbolicName());
+                    break;
+                case Bundle.UNINSTALLED:
+                    logger.debug("Bundle '{}' status UNINSTALLED", bundle.getSymbolicName());
+                    break;
+            }
+
+        }
+
+        // OpenHABPrometheusMetricsHandler.getInstance().getBundleContext()
 
         /*
          * try (Writer writer = response.getWriter()) {
