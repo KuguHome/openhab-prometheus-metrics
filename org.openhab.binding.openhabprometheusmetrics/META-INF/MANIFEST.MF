@@ -27,7 +27,6 @@ Import-Package:
  org.eclipse.smarthome.core.thing.firmware,
  org.eclipse.smarthome.core.thing.firmware.dto,
  org.eclipse.smarthome.core.thing.i18n,
- org.eclipse.smarthome.core.thing.internal,
  org.eclipse.smarthome.core.thing.link,
  org.eclipse.smarthome.core.thing.link.dto,
  org.eclipse.smarthome.core.thing.link.events,

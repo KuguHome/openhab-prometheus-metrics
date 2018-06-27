@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response;
 import org.eclipse.smarthome.core.auth.Role;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingRegistry;
-import org.eclipse.smarthome.core.thing.internal.ThingRegistryImpl;
 import org.eclipse.smarthome.io.rest.RESTResource;
 import org.eclipse.smarthome.io.rest.Stream2JSONInputStream;
 import org.openhab.binding.openhabprometheusmetrics.data.MetricItem;
@@ -55,7 +54,7 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
     private final Logger logger = LoggerFactory.getLogger(OpenHABPrometheusMetricsRESTResource.class);
 
     // private OpenHABPrometheusMetricsThingManager thingManager;
-    private ThingRegistryImpl thingRegistry;
+    private ThingRegistry thingRegistry;
 
     public static final String PATH_HABMETRICS = "metrics";
 
@@ -109,11 +108,6 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
         for (Thing thing : thingRegistry.getAll()) {
             logger.debug("Thing '{}' with status '{}'", thing.getUID().getAsString(), thing.getStatus().name());
         }
-        /*
-         * for (Thing thing : thingManager.getThingSet()) {
-         * logger.debug("Thing '{}' with status '{}'", thing.getUID().getAsString(), thing.getStatus().name());
-         * }
-         */
 
         /*
          * try (Writer writer = response.getWriter()) {
@@ -125,19 +119,9 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
                 .build();
     }
 
-    /*
-     * @Reference
-     * public void setThingManager(OpenHABPrometheusMetricsThingManager thingManager) {
-     * this.thingManager = thingManager;
-     * }
-     *
-     * public void unsetThingManager(OpenHABPrometheusMetricsThingManager thingManager) {
-     * this.thingManager = null;
-     * }
-     */
     @Reference
     protected void setThingRegistry(ThingRegistry thingRegistry) {
-        this.thingRegistry = (ThingRegistryImpl) thingRegistry;
+        this.thingRegistry = thingRegistry;
     }
 
     protected void unsetThingRegistry(ThingRegistry thingRegistry) {
