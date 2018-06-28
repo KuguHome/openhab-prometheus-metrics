@@ -10,8 +10,6 @@ package org.openhab.binding.openhabprometheusmetrics.rest;
 
 import java.io.StringWriter;
 import java.util.Collection;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -27,11 +25,6 @@ import org.eclipse.smarthome.core.auth.Role;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingRegistry;
 import org.eclipse.smarthome.io.rest.RESTResource;
-import org.eclipse.smarthome.io.rest.Stream2JSONInputStream;
-import org.openhab.binding.openhabprometheusmetrics.data.MetricItem;
-import org.openhab.binding.openhabprometheusmetrics.data.MetricsProvider;
-import org.openhab.binding.openhabprometheusmetrics.data.NodePromFileMetricsProvider;
-import org.openhab.binding.openhabprometheusmetrics.util.NodeFileReader;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
@@ -75,42 +68,7 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
 
     @GET
     @RolesAllowed({ Role.USER, Role.ADMIN })
-    @Path("/json")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Gets metrics info as JSON")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class),
-            @ApiResponse(code = 404, message = "Unknown page") })
-    public Response getMetricsJSON() throws Exception {
-
-        logger.info("METRICS GET STARTED.");
-
-        MetricsProvider<MetricItem> metricsProvider = new NodePromFileMetricsProvider(); // TODO: change it to factory
-                                                                                         // after it will be more than
-                                                                                         // one
-        Stream<MetricItem> stream = metricsProvider.getMetrics();
-
-        return Response.ok(new Stream2JSONInputStream(stream)).build();
-    }
-
-    @GET
-    @RolesAllowed({ Role.USER, Role.ADMIN })
-    @Path("/text")
-    @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Gets metrics info as TXT")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class),
-            @ApiResponse(code = 404, message = "Unknown page") })
-    public Response getMetricsText() throws Exception {
-
-        logger.info("METRICS GET STARTED.");
-        String fileName = "/home/ronx/Projects/kugu/openhab-prometheus-metrics/org.openhab.binding.openhabprometheusmetrics/src/main/resources/node.prom.txt";
-        NodeFileReader reader = new NodeFileReader();
-
-        return Response.ok(reader.read(fileName).collect(Collectors.joining("\n"))).build();
-    }
-
-    @GET
-    @RolesAllowed({ Role.USER, Role.ADMIN })
-    @Path("/prometheus/things")
+    @Path("/prometheus")
     @Produces(MediaType.TEXT_PLAIN)
     @ApiOperation(value = "Gets metrics info as for Prometheus")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class),
@@ -124,23 +82,6 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
             child.set(thing.getStatus().ordinal());
             openhabThingState.setChild(child, thing.getUID().getAsString());
         }
-
-        final StringWriter writer = new StringWriter();
-        TextFormat.write004(writer, thingsCollectorRegistry.metricFamilySamples());
-        return Response.ok(writer.toString()).build();
-
-    }
-
-    @GET
-    @RolesAllowed({ Role.USER, Role.ADMIN })
-    @Path("/prometheus/bundles")
-    @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Gets metrics info as for Prometheus")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class),
-            @ApiResponse(code = 404, message = "Unknown page") })
-    public Response getBundlesMetricsPrometheus(@Context HttpServletRequest request,
-            @Context HttpServletResponse response) throws Exception {
-
         Bundle[] bundles = FrameworkUtil.getBundle(OpenHABPrometheusMetricsRESTResource.class).getBundleContext()
                 .getBundles();
         for (Bundle bundle : bundles) {
@@ -151,7 +92,9 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
 
         final StringWriter writer = new StringWriter();
         TextFormat.write004(writer, bundlesCollectorRegistry.metricFamilySamples());
+        TextFormat.write004(writer, thingsCollectorRegistry.metricFamilySamples());
         return Response.ok(writer.toString()).build();
+
     }
 
     @Reference
