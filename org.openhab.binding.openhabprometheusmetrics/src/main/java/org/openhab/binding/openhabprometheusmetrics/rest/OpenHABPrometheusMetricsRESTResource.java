@@ -9,7 +9,6 @@
 package org.openhab.binding.openhabprometheusmetrics.rest;
 
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,7 +26,6 @@ import javax.ws.rs.core.Response;
 import org.eclipse.smarthome.core.auth.Role;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingRegistry;
-import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.io.rest.RESTResource;
 import org.eclipse.smarthome.io.rest.Stream2JSONInputStream;
 import org.openhab.binding.openhabprometheusmetrics.data.MetricItem;
@@ -43,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Gauge;
+import io.prometheus.client.Gauge.Child;
 import io.prometheus.client.exporter.common.TextFormat;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -65,7 +64,12 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
     // private OpenHABPrometheusMetricsThingManager thingManager;
     private ThingRegistry thingRegistry;
 
-    private final static CollectorRegistry collectorRegistry = CollectorRegistry.defaultRegistry;
+    private final static CollectorRegistry thingsCollectorRegistry = CollectorRegistry.defaultRegistry;
+    private final static CollectorRegistry bundlesCollectorRegistry = CollectorRegistry.defaultRegistry;
+    private final Gauge openhabThingState = Gauge.build("openhab_thing_state", "openHAB Things state")
+            .labelNames("thing").register(thingsCollectorRegistry);
+    private final Gauge openhabBundleState = Gauge.build("openhab_bundle_state", "openHAB OSGi bundles state")
+            .labelNames("bundle").register(bundlesCollectorRegistry);
 
     public static final String PATH_HABMETRICS = "metrics";
 
@@ -106,101 +110,49 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
 
     @GET
     @RolesAllowed({ Role.USER, Role.ADMIN })
-    @Path("/prometheus")
+    @Path("/prometheus/things")
     @Produces(MediaType.TEXT_PLAIN)
     @ApiOperation(value = "Gets metrics info as for Prometheus")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class),
             @ApiResponse(code = 404, message = "Unknown page") })
-    public Response getMetricsPrometheus(@Context HttpServletRequest request, @Context HttpServletResponse response)
-            throws Exception {
-
-        logger.info("Prometheus scrape started.");
+    public Response getThingsMetricsPrometheus(@Context HttpServletRequest request,
+            @Context HttpServletResponse response) throws Exception {
 
         Collection<Thing> things = thingRegistry.getAll();
-        String[] thingsLabelNames = things.stream().map(x -> x.getUID().getAsString()).toArray(String[]::new);
-        final Gauge openhabThingState = Gauge.build("openhab_thing_state", "openHAB OSGi bundles state")
-                .labelNames(thingsLabelNames).register(collectorRegistry);
         for (Thing thing : things) {
-            switch (thing.getStatus()) {
-                case ONLINE:
-                    openhabThingState.set(ThingStatus.ONLINE.ordinal());
-                    break;
-                case UNINITIALIZED:
-                    openhabThingState.set(ThingStatus.UNINITIALIZED.ordinal());
-                    break;
-                case UNKNOWN:
-                    openhabThingState.set(ThingStatus.UNKNOWN.ordinal());
-                    break;
-                case OFFLINE:
-                    openhabThingState.set(ThingStatus.OFFLINE.ordinal());
-                    break;
-                case REMOVING:
-                    openhabThingState.set(ThingStatus.REMOVING.ordinal());
-                    break;
-                case REMOVED:
-                    openhabThingState.set(ThingStatus.REMOVED.ordinal());
-                    break;
-                case INITIALIZING:
-                    openhabThingState.set(ThingStatus.INITIALIZING.ordinal());
-                    break;
-
-            }
-            // openhabBundleState.set(val);
-            // logger.debug("Thing '{}' with status '{}'", thing.getUID().getAsString(), thing.getStatus().name());
+            Child child = new Child();
+            child.set(thing.getStatus().ordinal());
+            openhabThingState.setChild(child, thing.getUID().getAsString());
         }
+
+        final StringWriter writer = new StringWriter();
+        TextFormat.write004(writer, thingsCollectorRegistry.metricFamilySamples());
+        return Response.ok(writer.toString()).build();
+
+    }
+
+    @GET
+    @RolesAllowed({ Role.USER, Role.ADMIN })
+    @Path("/prometheus/bundles")
+    @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Gets metrics info as for Prometheus")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = String.class),
+            @ApiResponse(code = 404, message = "Unknown page") })
+    public Response getBundlesMetricsPrometheus(@Context HttpServletRequest request,
+            @Context HttpServletResponse response) throws Exception {
 
         Bundle[] bundles = FrameworkUtil.getBundle(OpenHABPrometheusMetricsRESTResource.class).getBundleContext()
                 .getBundles();
-        String[] bundlesLabelNames = Arrays.stream(bundles).map(x -> x.getSymbolicName()).toArray(String[]::new);
-        final Gauge openhabBundleState = Gauge.build("openhab_bundle_state", "openHAB OSGi bundles state")
-                .labelNames(bundlesLabelNames).register(collectorRegistry);
-
         for (Bundle bundle : bundles) {
-            switch (bundle.getState()) {
-                case Bundle.ACTIVE:
-                    openhabBundleState.set(Bundle.ACTIVE);
-                    break;
-                case Bundle.INSTALLED:
-                    openhabBundleState.set(Bundle.INSTALLED);
-                    break;
-                case Bundle.RESOLVED:
-                    openhabBundleState.set(Bundle.RESOLVED);
-                    break;
-                case Bundle.STARTING:
-                    openhabBundleState.set(Bundle.STARTING);
-                    break;
-                case Bundle.STOPPING:
-                    openhabBundleState.set(Bundle.STOPPING);
-                    break;
-                case Bundle.UNINSTALLED:
-                    openhabBundleState.set(Bundle.UNINSTALLED);
-                    break;
-            }
-
+            Child child = new Child();
+            child.set(bundle.getState());
+            openhabBundleState.setChild(child, bundle.getSymbolicName());
         }
 
-        // OpenHABPrometheusMetricsHandler.getInstance().getBundleContext()
-
-        // try (Writer writer = response.getWriter()) {
-        // writer.write();
-        // writer.flush();
-        // }
-        // writer.write("openhab_bundle_state{bundle=\"org.openhab.binding.openhabprometheusmetrics\"} Resolved");
-        // writer.flush();
-        // }
-        //
         final StringWriter writer = new StringWriter();
-        TextFormat.write004(writer, collectorRegistry.metricFamilySamples());
+        TextFormat.write004(writer, bundlesCollectorRegistry.metricFamilySamples());
         return Response.ok(writer.toString()).build();
     }
-
-    // private String exposePrometheusMetrics(Request request, Response response) throws IOException {
-    // Response.status(200);
-    // response.type(TextFormat.CONTENT_TYPE_004);
-    // final StringWriter writer = new StringWriter();
-    // TextFormat.write004(writer, registry.metricFamilySamples());
-    // return writer.toString();
-    // }
 
     @Reference
     protected void setThingRegistry(ThingRegistry thingRegistry) {
