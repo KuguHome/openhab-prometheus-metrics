@@ -1,0 +1,7 @@
+sitemap openhabprometheusmetrics label="Example automation" {
+    Frame label="Example" {
+        Text item=ExampleDoorClosedSensor
+        Switch item=ExampleDoorSwitch
+
+    }   
+}

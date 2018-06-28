@@ -57,12 +57,10 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
     // private OpenHABPrometheusMetricsThingManager thingManager;
     private ThingRegistry thingRegistry;
 
-    private final static CollectorRegistry thingsCollectorRegistry = CollectorRegistry.defaultRegistry;
-    private final static CollectorRegistry bundlesCollectorRegistry = CollectorRegistry.defaultRegistry;
     private final Gauge openhabThingState = Gauge.build("openhab_thing_state", "openHAB Things state")
-            .labelNames("thing").register(thingsCollectorRegistry);
+            .labelNames("thing").register(CollectorRegistry.defaultRegistry);
     private final Gauge openhabBundleState = Gauge.build("openhab_bundle_state", "openHAB OSGi bundles state")
-            .labelNames("bundle").register(bundlesCollectorRegistry);
+            .labelNames("bundle").register(CollectorRegistry.defaultRegistry);
 
     public static final String PATH_HABMETRICS = "metrics";
 
@@ -91,8 +89,7 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
         }
 
         final StringWriter writer = new StringWriter();
-        TextFormat.write004(writer, bundlesCollectorRegistry.metricFamilySamples());
-        TextFormat.write004(writer, thingsCollectorRegistry.metricFamilySamples());
+        TextFormat.write004(writer, CollectorRegistry.defaultRegistry.metricFamilySamples());
         return Response.ok(writer.toString()).build();
 
     }
