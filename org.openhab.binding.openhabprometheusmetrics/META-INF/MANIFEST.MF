@@ -42,7 +42,6 @@ Import-Package:
  org.osgi.framework,
  org.osgi.framework.launch;version="1.2.0",
  org.osgi.service.component;version="1.3.0",
- org.osgi.service.component.annotations;version="1.3.0",
  org.osgi.service.http;version="1.2.1",
  org.slf4j
 Service-Component: OSGI-INF/*.xml
