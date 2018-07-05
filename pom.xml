@@ -4,8 +4,8 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>org.openhab.binding.openhabprometheusmetrics.parent</artifactId>
-	<groupId>org.openhab.binding.openhabprometheusmetrics</groupId>
+    <groupId>org.eclipse.io.prometheusmetrics</groupId>
+	<artifactId>org.eclipse.io.prometheusmetrics.parent</artifactId>
 	<version>2.4.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -16,8 +16,8 @@
 	</properties>
 
 	<modules>
-		<module>./org.openhab.binding.openhabprometheusmetrics</module>
-		<module>./org.openhab.binding.openhabprometheusmetrics.target</module>
+		<module>org.eclipse.io.prometheusmetrics</module>
+		<module>org.eclipse.io.prometheusmetrics.target</module>
 	</modules>
 
 	<build>
@@ -54,8 +54,8 @@
                     <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.openhab.binding.openhabprometheusmetrics</groupId>
-							<artifactId>org.openhab.binding.openhabprometheusmetrics.target</artifactId>
+							<groupId>org.eclipse.io.prometheusmetrics</groupId>
+							<artifactId>org.eclipse.io.prometheusmetrics.target</artifactId>
 							<version>2.4.0-SNAPSHOT</version>
 						</artifact>
 					</target>

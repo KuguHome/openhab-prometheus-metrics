@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.openhab.binding.openhabprometheusmetrics.rest.OpenHABPrometheusMetricsDashboardTile">
-   <service>
-      <provide interface="org.openhab.ui.dashboard.DashboardTile"/>
-   </service>
-   <reference bind="setHttpService" interface="org.osgi.service.http.HttpService" name="HttpService" unbind="unsetHttpService"/>
-   <implementation class="org.openhab.binding.openhabprometheusmetrics.rest.OpenHABPrometheusMetricsDashboardTile"/>
-</scr:component>
