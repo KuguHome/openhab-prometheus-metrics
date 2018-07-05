@@ -44,7 +44,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 			<plugin>
 				<!-- Target platform setzen -->
 				<groupId>org.eclipse.tycho</groupId>
@@ -72,6 +71,17 @@
 
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<configuration>
+						<includes>
+							<include>**/*.class</include>
+						</includes>
+						<testRuntime>p2Installed</testRuntime>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
