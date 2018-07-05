@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.eclipse.io.prometheusmetrics.rest.OpenHABPrometheusMetricsRESTResource">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="org.eclipse.io.prometheusmetrics.rest.OpenHABPrometheusMetricsRESTResource">
    <service>
       <provide interface="org.eclipse.smarthome.io.rest.RESTResource"/>
    </service>
+   <reference bind="setHttpService" interface="org.osgi.service.http.HttpService" name="HttpService" unbind="unsetHttpService"/>
    <reference bind="setThingRegistry" interface="org.eclipse.smarthome.core.thing.ThingRegistry" name="ThingRegistry" unbind="unsetThingRegistry"/>
    <implementation class="org.eclipse.io.prometheusmetrics.rest.OpenHABPrometheusMetricsRESTResource"/>
 </scr:component>

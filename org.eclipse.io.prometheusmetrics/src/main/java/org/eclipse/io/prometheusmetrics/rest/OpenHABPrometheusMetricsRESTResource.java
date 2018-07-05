@@ -27,8 +27,12 @@ import org.eclipse.smarthome.core.thing.ThingRegistry;
 import org.eclipse.smarthome.io.rest.RESTResource;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.http.HttpService;
+import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +58,8 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
 
     private final Logger logger = LoggerFactory.getLogger(OpenHABPrometheusMetricsRESTResource.class);
 
+    public static final String METRICS_ALIAS = "/metrics";
+
     // private OpenHABPrometheusMetricsThingManager thingManager;
     private ThingRegistry thingRegistry;
 
@@ -63,6 +69,8 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
             .labelNames("bundle").register(CollectorRegistry.defaultRegistry);
 
     public static final String PATH_HABMETRICS = "metrics";
+
+    protected HttpService httpService;
 
     @GET
     @RolesAllowed({ Role.USER, Role.ADMIN })
@@ -101,6 +109,31 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
 
     protected void unsetThingRegistry(ThingRegistry thingRegistry) {
         this.thingRegistry = null;
+    }
+
+    @Activate
+    protected void activate() {
+        try {
+            httpService.registerResources(METRICS_ALIAS, "web", null);
+            logger.info("Started Metrics at " + METRICS_ALIAS);
+        } catch (NamespaceException e) {
+            logger.error("Error during Metrics startup: {}", e.getMessage());
+        }
+    }
+
+    @Deactivate
+    protected void deactivate() {
+        httpService.unregister(METRICS_ALIAS);
+        logger.info("Stopped Metrics");
+    }
+
+    @Reference
+    protected void setHttpService(HttpService httpService) {
+        this.httpService = httpService;
+    }
+
+    protected void unsetHttpService(HttpService httpService) {
+        this.httpService = null;
     }
 
 }
