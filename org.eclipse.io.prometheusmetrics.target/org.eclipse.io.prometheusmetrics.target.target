@@ -21,7 +21,7 @@
 <unit id="org.openhab.deps.test.feature.group" version="0.0.0"/>
 <repository location="https://dl.bintray.com/openhab/p2/openhab-deps-repo/1.0.26"/>
 </location>
-    <location path="/mnt/data/projekte/Kugu/git/openhab-prometheus-metrics/org.eclipse.io.prometheusmetrics.target/bundles" type="Directory"/>
+    <location path="/home/ronx/Projects/kugu/prometheus-metrics/org.eclipse.io.prometheusmetrics.target/bundles" type="Directory"/>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
        <implicitDependencies>

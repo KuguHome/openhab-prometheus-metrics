@@ -10,6 +10,7 @@ package org.eclipse.io.prometheusmetrics.rest;
 
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.smarthome.config.discovery.DiscoveryResult;
+import org.eclipse.smarthome.config.discovery.inbox.Inbox;
 import org.eclipse.smarthome.core.auth.Role;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingRegistry;
@@ -31,6 +34,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
@@ -53,7 +58,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @Path(OpenHABPrometheusMetricsRESTResource.PATH_HABMETRICS)
 @Api(OpenHABPrometheusMetricsRESTResource.PATH_HABMETRICS)
-@Component
+@Component(service = { RESTResource.class, OpenHABPrometheusMetricsRESTResource.class })
 public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
 
     private final Logger logger = LoggerFactory.getLogger(OpenHABPrometheusMetricsRESTResource.class);
@@ -67,9 +72,12 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
             .labelNames("thing").register(CollectorRegistry.defaultRegistry);
     private final Gauge openhabBundleState = Gauge.build("openhab_bundle_state", "openHAB OSGi bundles state")
             .labelNames("bundle").register(CollectorRegistry.defaultRegistry);
+    private final Gauge openhabInboxState = Gauge.build("openhab_inbox_state", "openHAB inbox state")
+            .labelNames("inbox").register(CollectorRegistry.defaultRegistry);
 
     public static final String PATH_HABMETRICS = "metrics";
 
+    private Inbox inbox;
     protected HttpService httpService;
 
     @GET
@@ -81,6 +89,22 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
             @ApiResponse(code = 404, message = "Unknown page") })
     public Response getThingsMetricsPrometheus(@Context HttpServletRequest request,
             @Context HttpServletResponse response) throws Exception {
+
+        List<DiscoveryResult> inboxList = inbox.getAll();
+        {
+            Child child = new Child();
+            child.set(inboxList.size());
+            openhabThingState.setChild(child, "inbox");
+        }
+
+        /*
+         * for (DiscoveryResult discoveryResult : inboxList) {
+         * Child child = new Child();
+         * child.set(discoveryResult.ge().ordinal());
+         * discoveryResult.getLabel();
+         * openhabThingState.setChild(child, thing.getUID().getAsString());
+         * }
+         */
 
         Collection<Thing> things = thingRegistry.getAll();
         for (Thing thing : things) {
@@ -134,6 +158,15 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
 
     protected void unsetHttpService(HttpService httpService) {
         this.httpService = null;
+    }
+
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
+    protected void setInbox(Inbox inbox) {
+        this.inbox = inbox;
+    }
+
+    protected void unsetInbox(Inbox inbox) {
+        this.inbox = null;
     }
 
 }
