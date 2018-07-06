@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+ 
+    <parent>
+        <groupId>org.eclipse.io.prometheusmetrics</groupId>
+        <artifactId>org.eclipse.io.prometheusmetrics.parent</artifactId>
+        <version>2.4.0-SNAPSHOT</version>
+    </parent>
+ 
+    <artifactId>org.eclipse.io.prometheusmetrics.systemfragment</artifactId>
+    <packaging>jar</packaging>
+    <name>System Bundle Fragment exporting sun.misc</name>
+ 
+    <description>This bundle extends the System Bundle export list with the sun.misc package such that OSGi bundles may refer to Sun's misc implementation without the OSGi framework itself to provide it in a non-portable way.</description>
+ 
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <forceCreation>true</forceCreation>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                        <manifestEntries>
+                            <Export-Package>sun.misc</Export-Package>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.5.4</version>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <instructions>
+                        <Bundle-Category>io.prometheus.simpleclient</Bundle-Category>
+                        <Fragment-Host>system.bundle; extension:=framework</Fragment-Host>
+                    </instructions>
+                </configuration>
+            </plugin>
+ 
+        </plugins>
+    </build>
+ 
+</project>
