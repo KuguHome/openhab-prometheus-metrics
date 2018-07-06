@@ -5,7 +5,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.smarthome.core.thing"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="lib"/>
-	<classpathentry kind="lib" path="lib/simpleclient-0.4.0.jar"/>
-	<classpathentry kind="lib" path="lib/simpleclient_common-0.4.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
