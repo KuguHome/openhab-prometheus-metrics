@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>org.eclipse.io.prometheusmetrics</module>
+        <module>org.eclipse.io.prometheusmetrics.systemfragment</module>
 		<module>org.eclipse.io.prometheusmetrics.target</module>
 	</modules>
 

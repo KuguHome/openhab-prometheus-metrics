@@ -8,6 +8,8 @@ Bundle-SymbolicName: org.eclipse.io.prometheusmetrics;singleton:=true
 Bundle-Vendor: openHAB
 Bundle-Version: 2.4.0.qualifier
 Import-Package: 
+ io.prometheus.client,
+ io.prometheus.client.exporter.common,
  io.swagger.annotations;version="1.5.7.SNAPSHOT",
  javax.annotation.security;version="1.2.0",
  javax.servlet;version="3.1.0",
@@ -44,3 +46,4 @@ Import-Package:
  org.osgi.service.http;version="1.2.1",
  org.slf4j
 Service-Component: OSGI-INF/*.xml
+Automatic-Module-Name: org.eclipse.io.prometheusmetrics

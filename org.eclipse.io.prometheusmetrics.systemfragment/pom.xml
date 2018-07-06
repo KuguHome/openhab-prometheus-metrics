@@ -1,9 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-      <groupId>net.sdruskat</groupId>
-      <version>1.0.0</version>
  
-    <artifactId>net.sdruskat.fragment.sun.misc</artifactId>
+    <parent>
+        <groupId>org.eclipse.io.prometheusmetrics</groupId>
+        <artifactId>org.eclipse.io.prometheusmetrics.parent</artifactId>
+        <version>2.4.0-SNAPSHOT</version>
+    </parent>
+ 
+    <artifactId>org.eclipse.io.prometheusmetrics.systemfragment</artifactId>
     <packaging>jar</packaging>
     <name>System Bundle Fragment exporting sun.misc</name>
  
@@ -39,7 +43,7 @@
                 </executions>
                 <configuration>
                     <instructions>
-                        <Bundle-Category>net.sdruskat</Bundle-Category>
+                        <Bundle-Category>io.prometheus.simpleclient</Bundle-Category>
                         <Fragment-Host>system.bundle; extension:=framework</Fragment-Host>
                     </instructions>
                 </configuration>
