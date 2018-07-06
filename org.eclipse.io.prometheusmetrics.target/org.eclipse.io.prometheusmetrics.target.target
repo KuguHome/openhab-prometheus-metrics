@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="openHAB Target Platform" sequenceNumber="182">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="openHAB Target Platform" sequenceNumber="182">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.openhab.feature.p2.feature.group" version="0.0.0"/>
@@ -22,6 +21,390 @@
 <unit id="org.openhab.deps.test.feature.group" version="0.0.0"/>
 <repository location="https://dl.bintray.com/openhab/p2/openhab-deps-repo/1.0.26"/>
 </location>
+    <location path="/mnt/data/projekte/Kugu/git/openhab-prometheus-metrics/org.eclipse.io.prometheusmetrics.target" type="Directory"/>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+    <launcherArgs>
+        <programArgs>-Dorg.osgi.framework.system.packages.extra=sun.misc</programArgs>
+    </launcherArgs>
+    <includeBundles>
+        <plugin id="californium-osgi" version="1.0.6"/>
+        <plugin id="ch.qos.logback.classic"/>
+        <plugin id="ch.qos.logback.core"/>
+        <plugin id="ch.qos.logback.slf4j"/>
+        <plugin id="com.eclipsesource.jaxrs.jersey-min" version="2.22.2"/>
+        <plugin id="com.eclipsesource.jaxrs.provider.gson"/>
+        <plugin id="com.eclipsesource.jaxrs.provider.security" version="2.2.0.201602281253"/>
+        <plugin id="com.eclipsesource.jaxrs.provider.swagger"/>
+        <plugin id="com.eclipsesource.jaxrs.publisher" version="5.3.1.201602281253"/>
+        <plugin id="com.eclipsesource.jaxrs.swagger-all"/>
+        <plugin id="com.google.gson" version="2.7.0.v20170129-0911"/>
+        <plugin id="com.google.guava" version="15.0.0.v201403281430"/>
+        <plugin id="com.google.inject" version="3.0.0.v201312141243"/>
+        <plugin id="com.ibm.icu" version="56.1.0.v201601250100"/>
+        <plugin id="com.ibm.icu.source" version="56.1.0.v201601250100"/>
+        <plugin id="com.jayway.jsonpath.json-path" version="2.1.0"/>
+        <plugin id="com.neuronrobotics.nrjavaserial" version="3.12.0.OH"/>
+        <plugin id="com.zsmartsystems.zigbee"/>
+        <plugin id="com.zsmartsystems.zigbee.dongle.cc2531"/>
+        <plugin id="com.zsmartsystems.zigbee.dongle.ember"/>
+        <plugin id="com.zsmartsystems.zigbee.dongle.telegesis"/>
+        <plugin id="com.zsmartsystems.zigbee.dongle.xbee"/>
+        <plugin id="io.prometheus.simpleclient" version="0.4.0"/>
+        <plugin id="javax.activation" version="1.1.0.v201211130549"/>
+        <plugin id="javax.inject" version="1.0.0.v20091030"/>
+        <plugin id="javax.inject.source" version="1.0.0.v20091030"/>
+        <plugin id="javax.jmdns" version="3.5.4"/>
+        <plugin id="javax.mail"/>
+        <plugin id="javax.measure.unit-api" version="1.0.0"/>
+        <plugin id="javax.servlet" version="3.1.0.v20140303-1611"/>
+        <plugin id="javax.transaction"/>
+        <plugin id="javax.xml" version="1.3.4.v201005080400"/>
+        <plugin id="javax.xml.bind" version="2.2.0.v201105210648"/>
+        <plugin id="net.bytebuddy.byte-buddy" version="1.7.10"/>
+        <plugin id="net.bytebuddy.byte-buddy-agent" version="1.7.10"/>
+        <plugin id="net.minidev.accessors-smart"/>
+        <plugin id="net.minidev.json-smart" version="2.2"/>
+        <plugin id="org.antlr.runtime" version="3.2.0.v201101311130"/>
+        <plugin id="org.apache.ant" version="1.10.1.v20170504-0840"/>
+        <plugin id="org.apache.commons.cli" version="1.2.0.v201404270220"/>
+        <plugin id="org.apache.commons.codec" version="1.6.0.v201305230611"/>
+        <plugin id="org.apache.commons.collections" version="3.2.0.v2013030210310"/>
+        <plugin id="org.apache.commons.exec" version="1.1.0.v201301240602"/>
+        <plugin id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
+        <plugin id="org.apache.commons.io" version="2.2.0.v201405211200"/>
+        <plugin id="org.apache.commons.lang" version="2.6.0.v201404270220"/>
+        <plugin id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
+        <plugin id="org.apache.commons.logging.source" version="1.1.1.v201101211721"/>
+        <plugin id="org.apache.commons.net" version="3.2.0.v201305141515"/>
+        <plugin id="org.apache.felix.gogo.command" version="0.10.0.v201209301215"/>
+        <plugin id="org.apache.felix.gogo.command.source" version="0.10.0.v201209301215"/>
+        <plugin id="org.apache.felix.gogo.runtime" version="0.10.0.v201209301036"/>
+        <plugin id="org.apache.felix.gogo.runtime.source" version="0.10.0.v201209301036"/>
+        <plugin id="org.apache.felix.gogo.shell"/>
+        <plugin id="org.apache.felix.gogo.shell.source"/>
+        <plugin id="org.apache.felix.scr"/>
+        <plugin id="org.apache.httpcomponents.httpclient"/>
+        <plugin id="org.apache.httpcomponents.httpcore"/>
+        <plugin id="org.codehaus.groovy" version="2.3.7.xx-201411061335-e44-RELEASE"/>
+        <plugin id="org.eclipse.californium.element-connector" version="1.0.6"/>
+        <plugin id="org.eclipse.californium.scandium" version="1.0.6"/>
+        <plugin id="org.eclipse.core.contenttype" version="3.6.0.v20170207-1037"/>
+        <plugin id="org.eclipse.core.jobs" version="3.9.1.v20170714-0547"/>
+        <plugin id="org.eclipse.core.runtime" version="3.13.0.v20170207-1030"/>
+        <plugin id="org.eclipse.emf.common" version="2.13.0.v20170609-0707"/>
+        <plugin id="org.eclipse.emf.ecore" version="2.13.0.v20170609-0707"/>
+        <plugin id="org.eclipse.emf.ecore.xmi" version="2.13.0.v20170609-0707"/>
+        <plugin id="org.eclipse.emf.mwe.core" version="1.3.21.201705291011"/>
+        <plugin id="org.eclipse.emf.mwe2.runtime" version="2.9.1.201705291011"/>
+        <plugin id="org.eclipse.equinox.app" version="1.3.400.v20150715-1528"/>
+        <plugin id="org.eclipse.equinox.app.source" version="1.3.400.v20150715-1528"/>
+        <plugin id="org.eclipse.equinox.cm"/>
+        <plugin id="org.eclipse.equinox.common" version="3.9.0.v20170207-1454"/>
+        <plugin id="org.eclipse.equinox.console"/>
+        <plugin id="org.eclipse.equinox.ds"/>
+        <plugin id="org.eclipse.equinox.event"/>
+        <plugin id="org.eclipse.equinox.http.jetty"/>
+        <plugin id="org.eclipse.equinox.http.jetty.source"/>
+        <plugin id="org.eclipse.equinox.http.servlet"/>
+        <plugin id="org.eclipse.equinox.launcher"/>
+        <plugin id="org.eclipse.equinox.preferences" version="3.7.0.v20170126-2132"/>
+        <plugin id="org.eclipse.equinox.region"/>
+        <plugin id="org.eclipse.equinox.registry" version="3.7.0.v20170222-1344"/>
+        <plugin id="org.eclipse.equinox.transforms.hook"/>
+        <plugin id="org.eclipse.equinox.util"/>
+        <plugin id="org.eclipse.equinox.util.source"/>
+        <plugin id="org.eclipse.equinox.weaving.hook"/>
+        <plugin id="org.eclipse.jdt.annotation"/>
+        <plugin id="org.eclipse.jetty.client" version="9.3.22.v20171030"/>
+        <plugin id="org.eclipse.jetty.deploy"/>
+        <plugin id="org.eclipse.jetty.http" version="9.3.22.v20171030"/>
+        <plugin id="org.eclipse.jetty.io" version="9.3.22.v20171030"/>
+        <plugin id="org.eclipse.jetty.osgi.alpn.fragment"/>
+        <plugin id="org.eclipse.jetty.osgi.boot"/>
+        <plugin id="org.eclipse.jetty.osgi.httpservice"/>
+        <plugin id="org.eclipse.jetty.proxy"/>
+        <plugin id="org.eclipse.jetty.rewrite"/>
+        <plugin id="org.eclipse.jetty.security"/>
+        <plugin id="org.eclipse.jetty.server"/>
+        <plugin id="org.eclipse.jetty.servlet"/>
+        <plugin id="org.eclipse.jetty.util" version="9.3.22.v20171030"/>
+        <plugin id="org.eclipse.jetty.webapp"/>
+        <plugin id="org.eclipse.jetty.websocket.api" version="9.3.22.v20171030"/>
+        <plugin id="org.eclipse.jetty.websocket.client" version="9.3.22.v20171030"/>
+        <plugin id="org.eclipse.jetty.websocket.common" version="9.3.22.v20171030"/>
+        <plugin id="org.eclipse.jetty.xml"/>
+        <plugin id="org.eclipse.lsp4j" version="0.2.0.v20170518-0647"/>
+        <plugin id="org.eclipse.lsp4j.jsonrpc" version="0.2.0.v20170518-0647"/>
+        <plugin id="org.eclipse.osgi" version="3.12.1.v20170821-1548"/>
+        <plugin id="org.eclipse.osgi.services" version="3.6.0.v20170228-1906"/>
+        <plugin id="org.eclipse.osgi.util" version="3.4.0.v20170111-1608"/>
+        <plugin id="org.eclipse.paho.client.mqttv3" version="1.0.2"/>
+        <plugin id="org.eclipse.smarthome.auth.jaas"/>
+        <plugin id="org.eclipse.smarthome.auth.jaas.source"/>
+        <plugin id="org.eclipse.smarthome.automation.api"/>
+        <plugin id="org.eclipse.smarthome.automation.api.source"/>
+        <plugin id="org.eclipse.smarthome.automation.commands"/>
+        <plugin id="org.eclipse.smarthome.automation.commands.source"/>
+        <plugin id="org.eclipse.smarthome.automation.core"/>
+        <plugin id="org.eclipse.smarthome.automation.core.source"/>
+        <plugin id="org.eclipse.smarthome.automation.module.core"/>
+        <plugin id="org.eclipse.smarthome.automation.module.core.source"/>
+        <plugin id="org.eclipse.smarthome.automation.module.media"/>
+        <plugin id="org.eclipse.smarthome.automation.module.media.source"/>
+        <plugin id="org.eclipse.smarthome.automation.module.script"/>
+        <plugin id="org.eclipse.smarthome.automation.module.script.defaultscope"/>
+        <plugin id="org.eclipse.smarthome.automation.module.script.defaultscope.source"/>
+        <plugin id="org.eclipse.smarthome.automation.module.script.rulesupport"/>
+        <plugin id="org.eclipse.smarthome.automation.module.script.rulesupport.source"/>
+        <plugin id="org.eclipse.smarthome.automation.module.script.source"/>
+        <plugin id="org.eclipse.smarthome.automation.module.timer"/>
+        <plugin id="org.eclipse.smarthome.automation.module.timer.source"/>
+        <plugin id="org.eclipse.smarthome.automation.parser.gson"/>
+        <plugin id="org.eclipse.smarthome.automation.parser.gson.source"/>
+        <plugin id="org.eclipse.smarthome.automation.providers"/>
+        <plugin id="org.eclipse.smarthome.automation.providers.source"/>
+        <plugin id="org.eclipse.smarthome.automation.rest"/>
+        <plugin id="org.eclipse.smarthome.automation.rest.source"/>
+        <plugin id="org.eclipse.smarthome.binding.astro"/>
+        <plugin id="org.eclipse.smarthome.binding.astro.source"/>
+        <plugin id="org.eclipse.smarthome.binding.bluetooth"/>
+        <plugin id="org.eclipse.smarthome.binding.bluetooth.bluez"/>
+        <plugin id="org.eclipse.smarthome.binding.bluetooth.bluez.source"/>
+        <plugin id="org.eclipse.smarthome.binding.bluetooth.blukii"/>
+        <plugin id="org.eclipse.smarthome.binding.bluetooth.blukii.source"/>
+        <plugin id="org.eclipse.smarthome.binding.bluetooth.source"/>
+        <plugin id="org.eclipse.smarthome.binding.bosesoundtouch"/>
+        <plugin id="org.eclipse.smarthome.binding.bosesoundtouch.source"/>
+        <plugin id="org.eclipse.smarthome.binding.fsinternetradio"/>
+        <plugin id="org.eclipse.smarthome.binding.fsinternetradio.source"/>
+        <plugin id="org.eclipse.smarthome.binding.hue"/>
+        <plugin id="org.eclipse.smarthome.binding.hue.source"/>
+        <plugin id="org.eclipse.smarthome.binding.lifx"/>
+        <plugin id="org.eclipse.smarthome.binding.lifx.source"/>
+        <plugin id="org.eclipse.smarthome.binding.lirc"/>
+        <plugin id="org.eclipse.smarthome.binding.lirc.source"/>
+        <plugin id="org.eclipse.smarthome.binding.ntp"/>
+        <plugin id="org.eclipse.smarthome.binding.ntp.source"/>
+        <plugin id="org.eclipse.smarthome.binding.serialbutton"/>
+        <plugin id="org.eclipse.smarthome.binding.serialbutton.source"/>
+        <plugin id="org.eclipse.smarthome.binding.sonos"/>
+        <plugin id="org.eclipse.smarthome.binding.sonos.source"/>
+        <plugin id="org.eclipse.smarthome.binding.tradfri"/>
+        <plugin id="org.eclipse.smarthome.binding.tradfri.source"/>
+        <plugin id="org.eclipse.smarthome.binding.weatherunderground"/>
+        <plugin id="org.eclipse.smarthome.binding.weatherunderground.source"/>
+        <plugin id="org.eclipse.smarthome.binding.wemo"/>
+        <plugin id="org.eclipse.smarthome.binding.wemo.source"/>
+        <plugin id="org.eclipse.smarthome.binding.yahooweather"/>
+        <plugin id="org.eclipse.smarthome.binding.yahooweather.source"/>
+        <plugin id="org.eclipse.smarthome.config.core" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.config.core.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.config.discovery" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.config.discovery.mdns"/>
+        <plugin id="org.eclipse.smarthome.config.discovery.mdns.source"/>
+        <plugin id="org.eclipse.smarthome.config.discovery.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.config.discovery.upnp"/>
+        <plugin id="org.eclipse.smarthome.config.discovery.upnp.source"/>
+        <plugin id="org.eclipse.smarthome.config.discovery.usbserial"/>
+        <plugin id="org.eclipse.smarthome.config.discovery.usbserial.linuxsysfs"/>
+        <plugin id="org.eclipse.smarthome.config.discovery.usbserial.linuxsysfs.source"/>
+        <plugin id="org.eclipse.smarthome.config.discovery.usbserial.source"/>
+        <plugin id="org.eclipse.smarthome.config.dispatch"/>
+        <plugin id="org.eclipse.smarthome.config.dispatch.source"/>
+        <plugin id="org.eclipse.smarthome.config.serial"/>
+        <plugin id="org.eclipse.smarthome.config.serial.source"/>
+        <plugin id="org.eclipse.smarthome.config.xml"/>
+        <plugin id="org.eclipse.smarthome.config.xml.source"/>
+        <plugin id="org.eclipse.smarthome.core" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.audio" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.audio.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.autoupdate" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.autoupdate.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.binding.xml"/>
+        <plugin id="org.eclipse.smarthome.core.binding.xml.source"/>
+        <plugin id="org.eclipse.smarthome.core.extension.sample"/>
+        <plugin id="org.eclipse.smarthome.core.extension.sample.source"/>
+        <plugin id="org.eclipse.smarthome.core.id"/>
+        <plugin id="org.eclipse.smarthome.core.id.source"/>
+        <plugin id="org.eclipse.smarthome.core.persistence" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.persistence.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.scheduler" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.scheduler.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.thing" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.thing.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.thing.xml"/>
+        <plugin id="org.eclipse.smarthome.core.thing.xml.source"/>
+        <plugin id="org.eclipse.smarthome.core.transform" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.transform.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.voice" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.core.voice.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.extensionservice.marketplace"/>
+        <plugin id="org.eclipse.smarthome.extensionservice.marketplace.automation"/>
+        <plugin id="org.eclipse.smarthome.extensionservice.marketplace.automation.source"/>
+        <plugin id="org.eclipse.smarthome.extensionservice.marketplace.source"/>
+        <plugin id="org.eclipse.smarthome.io.console" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.console.eclipse"/>
+        <plugin id="org.eclipse.smarthome.io.console.eclipse.source"/>
+        <plugin id="org.eclipse.smarthome.io.console.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.javasound" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.javasound.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.monitor"/>
+        <plugin id="org.eclipse.smarthome.io.monitor.source"/>
+        <plugin id="org.eclipse.smarthome.io.mqttembeddedbroker"/>
+        <plugin id="org.eclipse.smarthome.io.mqttembeddedbroker.source"/>
+        <plugin id="org.eclipse.smarthome.io.net" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.net.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.rest" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.rest.auth"/>
+        <plugin id="org.eclipse.smarthome.io.rest.auth.basic"/>
+        <plugin id="org.eclipse.smarthome.io.rest.auth.basic.source"/>
+        <plugin id="org.eclipse.smarthome.io.rest.auth.source"/>
+        <plugin id="org.eclipse.smarthome.io.rest.core" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.rest.core.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.rest.log"/>
+        <plugin id="org.eclipse.smarthome.io.rest.log.source"/>
+        <plugin id="org.eclipse.smarthome.io.rest.mdns"/>
+        <plugin id="org.eclipse.smarthome.io.rest.mdns.source"/>
+        <plugin id="org.eclipse.smarthome.io.rest.optimize"/>
+        <plugin id="org.eclipse.smarthome.io.rest.optimize.source"/>
+        <plugin id="org.eclipse.smarthome.io.rest.sitemap" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.rest.sitemap.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.rest.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.io.rest.sse"/>
+        <plugin id="org.eclipse.smarthome.io.rest.sse.source"/>
+        <plugin id="org.eclipse.smarthome.io.rest.voice"/>
+        <plugin id="org.eclipse.smarthome.io.rest.voice.source"/>
+        <plugin id="org.eclipse.smarthome.io.transport.mdns"/>
+        <plugin id="org.eclipse.smarthome.io.transport.mdns.source"/>
+        <plugin id="org.eclipse.smarthome.io.transport.mqtt"/>
+        <plugin id="org.eclipse.smarthome.io.transport.mqtt.source"/>
+        <plugin id="org.eclipse.smarthome.io.transport.serial"/>
+        <plugin id="org.eclipse.smarthome.io.transport.serial.javacomm"/>
+        <plugin id="org.eclipse.smarthome.io.transport.serial.javacomm.source"/>
+        <plugin id="org.eclipse.smarthome.io.transport.serial.rxtx"/>
+        <plugin id="org.eclipse.smarthome.io.transport.serial.rxtx.source"/>
+        <plugin id="org.eclipse.smarthome.io.transport.serial.source"/>
+        <plugin id="org.eclipse.smarthome.io.transport.upnp"/>
+        <plugin id="org.eclipse.smarthome.io.transport.upnp.source"/>
+        <plugin id="org.eclipse.smarthome.io.webaudio"/>
+        <plugin id="org.eclipse.smarthome.io.webaudio.source"/>
+        <plugin id="org.eclipse.smarthome.model.core" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.model.core.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.model.item" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.model.item.ide"/>
+        <plugin id="org.eclipse.smarthome.model.item.ide.source"/>
+        <plugin id="org.eclipse.smarthome.model.item.runtime"/>
+        <plugin id="org.eclipse.smarthome.model.item.runtime.source"/>
+        <plugin id="org.eclipse.smarthome.model.item.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.model.lsp"/>
+        <plugin id="org.eclipse.smarthome.model.lsp.source"/>
+        <plugin id="org.eclipse.smarthome.model.persistence" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.model.persistence.ide"/>
+        <plugin id="org.eclipse.smarthome.model.persistence.ide.source"/>
+        <plugin id="org.eclipse.smarthome.model.persistence.runtime"/>
+        <plugin id="org.eclipse.smarthome.model.persistence.runtime.source"/>
+        <plugin id="org.eclipse.smarthome.model.persistence.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.model.rule"/>
+        <plugin id="org.eclipse.smarthome.model.rule.ide"/>
+        <plugin id="org.eclipse.smarthome.model.rule.ide.source"/>
+        <plugin id="org.eclipse.smarthome.model.rule.runtime"/>
+        <plugin id="org.eclipse.smarthome.model.rule.runtime.source"/>
+        <plugin id="org.eclipse.smarthome.model.rule.source"/>
+        <plugin id="org.eclipse.smarthome.model.script" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.model.script.ide"/>
+        <plugin id="org.eclipse.smarthome.model.script.ide.source"/>
+        <plugin id="org.eclipse.smarthome.model.script.runtime"/>
+        <plugin id="org.eclipse.smarthome.model.script.runtime.source"/>
+        <plugin id="org.eclipse.smarthome.model.script.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.model.sitemap" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.model.sitemap.ide"/>
+        <plugin id="org.eclipse.smarthome.model.sitemap.ide.source"/>
+        <plugin id="org.eclipse.smarthome.model.sitemap.runtime"/>
+        <plugin id="org.eclipse.smarthome.model.sitemap.runtime.source"/>
+        <plugin id="org.eclipse.smarthome.model.sitemap.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.model.thing"/>
+        <plugin id="org.eclipse.smarthome.model.thing.ide"/>
+        <plugin id="org.eclipse.smarthome.model.thing.ide.source"/>
+        <plugin id="org.eclipse.smarthome.model.thing.runtime"/>
+        <plugin id="org.eclipse.smarthome.model.thing.runtime.source"/>
+        <plugin id="org.eclipse.smarthome.model.thing.source"/>
+        <plugin id="org.eclipse.smarthome.storage.json"/>
+        <plugin id="org.eclipse.smarthome.storage.json.source"/>
+        <plugin id="org.eclipse.smarthome.storage.mapdb"/>
+        <plugin id="org.eclipse.smarthome.storage.mapdb.source"/>
+        <plugin id="org.eclipse.smarthome.test"/>
+        <plugin id="org.eclipse.smarthome.test.source"/>
+        <plugin id="org.eclipse.smarthome.transform.exec"/>
+        <plugin id="org.eclipse.smarthome.transform.exec.source"/>
+        <plugin id="org.eclipse.smarthome.transform.javascript"/>
+        <plugin id="org.eclipse.smarthome.transform.javascript.source"/>
+        <plugin id="org.eclipse.smarthome.transform.jsonpath"/>
+        <plugin id="org.eclipse.smarthome.transform.jsonpath.source"/>
+        <plugin id="org.eclipse.smarthome.transform.map"/>
+        <plugin id="org.eclipse.smarthome.transform.map.source"/>
+        <plugin id="org.eclipse.smarthome.transform.regex"/>
+        <plugin id="org.eclipse.smarthome.transform.regex.source"/>
+        <plugin id="org.eclipse.smarthome.transform.scale"/>
+        <plugin id="org.eclipse.smarthome.transform.scale.source"/>
+        <plugin id="org.eclipse.smarthome.transform.xpath"/>
+        <plugin id="org.eclipse.smarthome.transform.xpath.source"/>
+        <plugin id="org.eclipse.smarthome.transform.xslt"/>
+        <plugin id="org.eclipse.smarthome.transform.xslt.source"/>
+        <plugin id="org.eclipse.smarthome.ui" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.ui.basic" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.ui.basic.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.ui.classic"/>
+        <plugin id="org.eclipse.smarthome.ui.classic.source"/>
+        <plugin id="org.eclipse.smarthome.ui.icon"/>
+        <plugin id="org.eclipse.smarthome.ui.icon.source"/>
+        <plugin id="org.eclipse.smarthome.ui.iconset.classic"/>
+        <plugin id="org.eclipse.smarthome.ui.iconset.classic.source"/>
+        <plugin id="org.eclipse.smarthome.ui.paper" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.ui.paper.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.smarthome.ui.source" version="0.10.0.201806271317"/>
+        <plugin id="org.eclipse.soda.dk.comm" version="1.2.201"/>
+        <plugin id="org.eclipse.xtend" version="2.2.0.v201605260315"/>
+        <plugin id="org.eclipse.xtend.lib" version="2.12.0.v20170518-0757"/>
+        <plugin id="org.eclipse.xtend.lib.macro" version="2.12.0.v20170518-0757"/>
+        <plugin id="org.eclipse.xtext" version="2.12.0.v20170518-0959"/>
+        <plugin id="org.eclipse.xtext.common.types" version="2.12.0.v20170519-0752"/>
+        <plugin id="org.eclipse.xtext.ide" version="2.12.0.v20170518-0959"/>
+        <plugin id="org.eclipse.xtext.smap"/>
+        <plugin id="org.eclipse.xtext.util" version="2.12.0.v20170518-0959"/>
+        <plugin id="org.eclipse.xtext.xbase" version="2.12.0.v20170519-0752"/>
+        <plugin id="org.eclipse.xtext.xbase.ide" version="2.12.0.v20170519-0752"/>
+        <plugin id="org.eclipse.xtext.xbase.lib" version="2.12.0.v20170518-0757"/>
+        <plugin id="org.hamcrest" version="1.1.0.v20090501071000"/>
+        <plugin id="org.hamcrest.core" version="1.3.0.v201303031735"/>
+        <plugin id="org.hamcrest.core.source" version="1.3.0.v201303031735"/>
+        <plugin id="org.hamcrest.integration" version="1.3.0.v201305210900"/>
+        <plugin id="org.hamcrest.library" version="1.3.0.v201505072020"/>
+        <plugin id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
+        <plugin id="org.junit" version="4.12.0.v201504281640"/>
+        <plugin id="org.junit.source" version="4.12.0.v201504281640"/>
+        <plugin id="org.jupnp" version="2.3.0.201711021118"/>
+        <plugin id="org.mapdb.mapdb" version="1.0.9"/>
+        <plugin id="org.mockito.mockito-core" version="2.13.0"/>
+        <plugin id="org.objectweb.asm" version="5.0.1.v201404251740"/>
+        <plugin id="org.objectweb.asm.source" version="5.0.1.v201404251740"/>
+        <plugin id="org.objenesis" version="2.6.0"/>
+        <plugin id="org.openhab.core"/>
+        <plugin id="org.openhab.core.compat1x"/>
+        <plugin id="org.openhab.io.jetty.certificate"/>
+        <plugin id="org.openhab.io.rest.docs"/>
+        <plugin id="org.openhab.io.sound"/>
+        <plugin id="org.openhab.ui.basicui"/>
+        <plugin id="org.openhab.ui.classicui"/>
+        <plugin id="org.openhab.ui.dashboard"/>
+        <plugin id="org.openhab.ui.paperui"/>
+        <plugin id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
+        <plugin id="org.slf4j.api.source" version="1.7.2.v20121108-1250"/>
+        <plugin id="org.slf4j.jul"/>
+        <plugin id="org.slf4j.log4j" version="1.7.2.v20130115-1340"/>
+        <plugin id="tec.uom.lib.uom-lib-common" version="1.0.2"/>
+        <plugin id="tec.uom.se" version="1.0.8"/>
+        <plugin id="net.sdruskat.fragment.sun.misc"/>
+    </includeBundles>
 </target>
