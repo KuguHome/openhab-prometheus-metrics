@@ -1,7 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .,
- lib/simpleclient_common-0.4.0.jar
+Bundle-ClassPath: .
 Bundle-ManifestVersion: 2
 Bundle-Name: OpenHABPrometheusMetrics Misc
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
