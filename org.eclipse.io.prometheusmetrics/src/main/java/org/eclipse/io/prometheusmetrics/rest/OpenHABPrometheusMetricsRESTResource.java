@@ -10,7 +10,10 @@ package org.eclipse.io.prometheusmetrics.rest;
 
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +25,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.smarthome.config.discovery.DiscoveryResult;
 import org.eclipse.smarthome.config.discovery.inbox.Inbox;
 import org.eclipse.smarthome.core.auth.Role;
+import org.eclipse.smarthome.core.events.EventFilter;
+import org.eclipse.smarthome.core.events.EventSubscriber;
+import org.eclipse.smarthome.core.items.events.ItemCommandEvent;
+import org.eclipse.smarthome.core.items.events.ItemStateEvent;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingRegistry;
 import org.eclipse.smarthome.io.rest.RESTResource;
@@ -36,6 +44,8 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
@@ -58,8 +68,10 @@ import io.swagger.annotations.ApiResponses;
  */
 @Path(OpenHABPrometheusMetricsRESTResource.PATH_HABMETRICS)
 @Api(OpenHABPrometheusMetricsRESTResource.PATH_HABMETRICS)
-@Component(service = { RESTResource.class, OpenHABPrometheusMetricsRESTResource.class })
-public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
+@Component(service = { EventSubscriber.class, EventHandler.class, RESTResource.class,
+        OpenHABPrometheusMetricsRESTResource.class })
+public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
+        implements RESTResource, EventHandler, EventSubscriber {
 
     private final Logger logger = LoggerFactory.getLogger(OpenHABPrometheusMetricsRESTResource.class);
 
@@ -72,13 +84,19 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
             .labelNames("thing").register(CollectorRegistry.defaultRegistry);
     private final Gauge openhabBundleState = Gauge.build("openhab_bundle_state", "openHAB OSGi bundles state")
             .labelNames("bundle").register(CollectorRegistry.defaultRegistry);
-    private final Gauge openhabInboxState = Gauge.build("openhab_inbox_count", "openHAB inbox count")
+    private final Gauge openhabInboxCount = Gauge.build("openhab_inbox_count", "openHAB inbox count")
+            .register(CollectorRegistry.defaultRegistry);
+    private final Gauge openhabEventCount = Gauge.build("openhab_event_count", "openHAB event count")
             .register(CollectorRegistry.defaultRegistry);
 
     public static final String PATH_HABMETRICS = "metrics";
 
     private Inbox inbox;
     protected HttpService httpService;
+    // private EventAdmin eventAdmin;
+    // private EventSubscriber eventSubscriber;
+    private List<Event> eventCache = new LinkedList<>();
+    private List<org.eclipse.smarthome.core.events.@NonNull Event> smarthomeEventCache = new LinkedList<>();
 
     @GET
     @RolesAllowed({ Role.USER, Role.ADMIN })
@@ -94,7 +112,13 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
         {
             Child child = new Child();
             child.set(inboxList.size());
-            openhabInboxState.setChild(child);
+            openhabInboxCount.setChild(child);
+        }
+
+        {
+            Child child = new Child();
+            child.set(eventCache.size());
+            openhabEventCount.setChild(child);
         }
 
         /*
@@ -167,6 +191,50 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
 
     protected void unsetInbox(Inbox inbox) {
         this.inbox = null;
+    }
+
+    // @Reference
+    // public void setEventAdmin(EventAdmin eventAdmin) {
+    // this.eventAdmin = eventAdmin;
+    // }
+    //
+    // public void unsetEventAdmin(EventAdmin eventAdmin) {
+    // this.eventAdmin = null;
+    // }
+    //
+    // public void unsetEventSubscriber() {
+    // this.eventSubscriber = null;
+    // }
+    //
+    // @Reference
+    // public void setEventSubscriber(EventSubscriber eventSubscriber) {
+    // this.eventSubscriber = eventSubscriber;
+    // }
+
+    @Override
+    public void handleEvent(Event event) {
+        logger.debug("event!");
+        eventCache.add(event);
+
+    }
+
+    @Override
+    public void receive(org.eclipse.smarthome.core.events.@NonNull Event event) {
+        logger.debug("smarthome event!");
+        smarthomeEventCache.add(event);
+    }
+
+    @Override
+    public Set<String> getSubscribedEventTypes() {
+        Set<String> types = new HashSet<>(2);
+        types.add(ItemCommandEvent.TYPE);
+        types.add(ItemStateEvent.TYPE);
+        return types;
+    }
+
+    @Override
+    public EventFilter getEventFilter() {
+        return null;
     }
 
 }
