@@ -72,8 +72,8 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
             .labelNames("thing").register(CollectorRegistry.defaultRegistry);
     private final Gauge openhabBundleState = Gauge.build("openhab_bundle_state", "openHAB OSGi bundles state")
             .labelNames("bundle").register(CollectorRegistry.defaultRegistry);
-    private final Gauge openhabInboxState = Gauge.build("openhab_inbox_state", "openHAB inbox state")
-            .labelNames("inbox").register(CollectorRegistry.defaultRegistry);
+    private final Gauge openhabInboxState = Gauge.build("openhab_inbox_count", "openHAB inbox count")
+            .register(CollectorRegistry.defaultRegistry);
 
     public static final String PATH_HABMETRICS = "metrics";
 
@@ -94,7 +94,7 @@ public class OpenHABPrometheusMetricsRESTResource implements RESTResource {
         {
             Child child = new Child();
             child.set(inboxList.size());
-            openhabThingState.setChild(child, "inbox");
+            openhabInboxState.setChild(child);
         }
 
         /*
