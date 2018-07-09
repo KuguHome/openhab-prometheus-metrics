@@ -77,24 +77,22 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
 
     public static final String METRICS_ALIAS = "/metrics";
 
-    // private OpenHABPrometheusMetricsThingManager thingManager;
-    private ThingRegistry thingRegistry;
-
     private final Gauge openhabThingState = Gauge.build("openhab_thing_state", "openHAB Things state")
             .labelNames("thing").register(CollectorRegistry.defaultRegistry);
     private final Gauge openhabBundleState = Gauge.build("openhab_bundle_state", "openHAB OSGi bundles state")
             .labelNames("bundle").register(CollectorRegistry.defaultRegistry);
     private final Gauge openhabInboxCount = Gauge.build("openhab_inbox_count", "openHAB inbox count")
             .register(CollectorRegistry.defaultRegistry);
-    private final Gauge openhabEventCount = Gauge.build("openhab_event_count", "openHAB event count")
+    private final Gauge smarthomeEventCount = Gauge.build("smarthome_event_count", "openHAB event count")
             .register(CollectorRegistry.defaultRegistry);
 
     public static final String PATH_HABMETRICS = "metrics";
 
+    private ThingRegistry thingRegistry;
     private Inbox inbox;
     protected HttpService httpService;
     // private EventAdmin eventAdmin;
-    // private EventSubscriber eventSubscriber;
+    private EventSubscriber eventSubscriber;
     private List<Event> eventCache = new LinkedList<>();
     private List<org.eclipse.smarthome.core.events.@NonNull Event> smarthomeEventCache = new LinkedList<>();
 
@@ -117,8 +115,8 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
 
         {
             Child child = new Child();
-            child.set(eventCache.size());
-            openhabEventCount.setChild(child);
+            child.set(smarthomeEventCache.size());
+            smarthomeEventCount.setChild(child);
         }
 
         /*
@@ -202,14 +200,14 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
     // this.eventAdmin = null;
     // }
     //
-    // public void unsetEventSubscriber() {
-    // this.eventSubscriber = null;
-    // }
-    //
-    // @Reference
-    // public void setEventSubscriber(EventSubscriber eventSubscriber) {
-    // this.eventSubscriber = eventSubscriber;
-    // }
+    public void unsetEventSubscriber() {
+        this.eventSubscriber = null;
+    }
+
+    @Reference
+    public void setEventSubscriber(EventSubscriber eventSubscriber) {
+        this.eventSubscriber = eventSubscriber;
+    }
 
     @Override
     public void handleEvent(Event event) {
@@ -221,7 +219,9 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
     @Override
     public void receive(org.eclipse.smarthome.core.events.@NonNull Event event) {
         logger.debug("smarthome event!");
-        smarthomeEventCache.add(event);
+        if (event.getTopic().startsWith("smarthome/")) {
+            smarthomeEventCache.add(event);
+        }
     }
 
     @Override
