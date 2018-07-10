@@ -9,11 +9,14 @@
 package org.eclipse.io.prometheusmetrics.rest;
 
 import java.io.StringWriter;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Stream;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +36,6 @@ import org.eclipse.smarthome.core.events.EventFilter;
 import org.eclipse.smarthome.core.events.EventSubscriber;
 import org.eclipse.smarthome.core.items.events.ItemCommandEvent;
 import org.eclipse.smarthome.core.items.events.ItemStateEvent;
-import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingRegistry;
 import org.eclipse.smarthome.io.rest.RESTResource;
 import org.osgi.framework.Bundle;
@@ -84,7 +86,7 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
     private final Gauge openhabInboxCount = Gauge.build("openhab_inbox_count", "openHAB inbox count")
             .register(CollectorRegistry.defaultRegistry);
     private final Gauge smarthomeEventCount = Gauge.build("smarthome_event_count", "openHAB event count")
-            .register(CollectorRegistry.defaultRegistry);
+            .labelNames("source").register(CollectorRegistry.defaultRegistry);
 
     public static final String PATH_HABMETRICS = "metrics";
 
@@ -92,9 +94,10 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
     private Inbox inbox;
     protected HttpService httpService;
     // private EventAdmin eventAdmin;
+    private EventHandler eventHandler;
     private EventSubscriber eventSubscriber;
-    private List<Event> eventCache = new LinkedList<>();
-    private List<org.eclipse.smarthome.core.events.@NonNull Event> smarthomeEventCache = new LinkedList<>();
+
+    private Map<String, Queue<org.eclipse.smarthome.core.events.@NonNull Event>> smarthomeEventCache = new ConcurrentHashMap<>();
 
     @GET
     @RolesAllowed({ Role.USER, Role.ADMIN })
@@ -113,11 +116,11 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
             openhabInboxCount.setChild(child);
         }
 
-        {
+        smarthomeEventCache.forEach((s, q) -> {
             Child child = new Child();
-            child.set(smarthomeEventCache.size());
-            smarthomeEventCount.setChild(child);
-        }
+            child.set(q.size());
+            smarthomeEventCount.setChild(child, s);
+        });
 
         /*
          * for (DiscoveryResult discoveryResult : inboxList) {
@@ -128,19 +131,19 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
          * }
          */
 
-        Collection<Thing> things = thingRegistry.getAll();
-        for (Thing thing : things) {
+        thingRegistry.getAll().parallelStream().forEach(t -> {
             Child child = new Child();
-            child.set(thing.getStatus().ordinal());
-            openhabThingState.setChild(child, thing.getUID().getAsString());
-        }
+            child.set(t.getStatus().ordinal());
+            openhabThingState.setChild(child, t.getUID().getAsString());
+        });
+
         Bundle[] bundles = FrameworkUtil.getBundle(OpenHABPrometheusMetricsRESTResource.class).getBundleContext()
                 .getBundles();
-        for (Bundle bundle : bundles) {
+        Stream.of(bundles).parallel().forEach(b -> {
             Child child = new Child();
-            child.set(bundle.getState());
-            openhabBundleState.setChild(child, bundle.getSymbolicName());
-        }
+            child.set(b.getState());
+            openhabBundleState.setChild(child, b.getSymbolicName());
+        });
 
         final StringWriter writer = new StringWriter();
         TextFormat.write004(writer, CollectorRegistry.defaultRegistry.metricFamilySamples());
@@ -200,8 +203,17 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
     // this.eventAdmin = null;
     // }
     //
+
     public void unsetEventSubscriber() {
         this.eventSubscriber = null;
+    }
+
+    public void unsetEventHandler() {
+        this.eventHandler = null;
+    }
+
+    public void setEventHandler(EventHandler eventHandler) {
+        this.eventHandler = eventHandler;
     }
 
     @Reference
@@ -212,15 +224,21 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
     @Override
     public void handleEvent(Event event) {
         logger.debug("event!");
-        eventCache.add(event);
-
     }
 
     @Override
     public void receive(org.eclipse.smarthome.core.events.@NonNull Event event) {
-        logger.debug("smarthome event!");
         if (event.getTopic().startsWith("smarthome/")) {
-            smarthomeEventCache.add(event);
+            String source = event.getSource();
+            if (source == null) {
+                logger.debug("Event source equals to null.");
+                String[] tmp = event.getTopic().split("/");
+                source = tmp[tmp.length - 2];
+            }
+            smarthomeEventCache.putIfAbsent(source, new ConcurrentLinkedQueue<>());
+            smarthomeEventCache.get(source).add(event);
+        } else {
+            logger.debug("Received event not from smarthome");
         }
     }
 

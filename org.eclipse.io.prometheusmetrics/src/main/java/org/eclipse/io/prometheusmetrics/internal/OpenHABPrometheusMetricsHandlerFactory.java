@@ -62,7 +62,7 @@ public class OpenHABPrometheusMetricsHandlerFactory extends BaseThingHandlerFact
     }
 
     @Override
-    public void handleEvent(Event event) {
+    public void handleEvent(@Nullable Event event) {
         logger.debug("event!");
 
     }
