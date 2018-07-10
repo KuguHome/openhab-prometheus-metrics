@@ -9,6 +9,7 @@
 package org.eclipse.io.prometheusmetrics.rest;
 
 import java.io.StringWriter;
+import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +98,7 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
     private EventHandler eventHandler;
     private EventSubscriber eventSubscriber;
 
-    private Map<String, Queue<org.eclipse.smarthome.core.events.@NonNull Event>> smarthomeEventCache = new ConcurrentHashMap<>();
+    private Map<String, Queue<WeakReference<org.eclipse.smarthome.core.events.@NonNull Event>>> smarthomeEventCache = new ConcurrentHashMap<>();
 
     @GET
     @RolesAllowed({ Role.USER, Role.ADMIN })
@@ -236,7 +237,8 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
                 source = tmp[tmp.length - 2];
             }
             smarthomeEventCache.putIfAbsent(source, new ConcurrentLinkedQueue<>());
-            smarthomeEventCache.get(source).add(event);
+            WeakReference<org.eclipse.smarthome.core.events.@NonNull Event> weakReference = new WeakReference<>(event);
+            smarthomeEventCache.get(source).add(weakReference);
         } else {
             logger.debug("Received event not from smarthome");
         }
