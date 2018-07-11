@@ -45,6 +45,8 @@ Import-Package:
  org.eclipse.smarthome.core.types,
  org.eclipse.smarthome.io.rest,
  org.openhab.ui.dashboard,
+ org.apache.logging.log4j;bundle-version="2.1.0"
+ org.apache.logging.log4j.message;bundle-version="2.1.0"
  org.osgi.framework,
  org.osgi.framework.launch;version="1.2.0",
  org.osgi.service.component;version="1.3.0",
@@ -54,6 +56,7 @@ Import-Package:
  org.slf4j
 Service-Component: OSGI-INF/*.xml
 Automatic-Module-Name: org.eclipse.io.prometheusmetrics
-Require-Bundle: system.bundle
+Require-Bundle: system.bundle,
+ org.apache.logging.log4j.core;bundle-version="2.1.0"
 
 

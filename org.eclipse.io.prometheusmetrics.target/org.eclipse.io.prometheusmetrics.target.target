@@ -21,13 +21,7 @@
 <unit id="org.openhab.deps.test.feature.group" version="0.0.0"/>
 <repository location="https://dl.bintray.com/openhab/p2/openhab-deps-repo/1.0.26"/>
 </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-        <unit id="io.prometheus.simpleclient" version="0.4.0"/>
-        <unit id="io.prometheus.simpleclient_common" version="0.4.0"/>
-        <unit id="io.prometheus.simpleclient_logback" version="0.4.0"/>
-        <repository location="file:/mnt/data/projekte/Kugu/git/openhab-prometheus-metrics/org.eclipse.io.prometheusmetrics.p2site/target/repository/"/>
-        <unit id="net.sdruskat.fragment.sun.misc" version="1.0.0"/>
-    </location>
+    <location path="/home/ronx/Projects/kugu/prometheus-metrics/org.eclipse.io.prometheusmetrics.target/bundles" type="Directory"/>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 </target>
