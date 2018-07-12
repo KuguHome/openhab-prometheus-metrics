@@ -10,7 +10,8 @@
 
 	<artifactId>org.eclipse.io.prometheusmetrics.appender</artifactId>
 	<packaging>bundle</packaging>
-	<name>Log Appender</name>
+	<name>KUGU Log Appender</name>
+	<version>1.0.0</version>
 
 	<description>This bundle extends the System Bundle export list with the sun.misc package such that OSGi bundles may refer to Sun's misc implementation without the OSGi framework itself to provide it in a non-portable way.</description>
 
@@ -20,6 +21,13 @@
 			<artifactId>log4j-core</artifactId>
 			<version>2.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.prometheus/simpleclient -->
+		<dependency>
+			<groupId>io.prometheus</groupId>
+			<artifactId>simpleclient</artifactId>
+			<version>0.4.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.prometheus/simpleclient_logback -->
 	</dependencies>
 
 	<build>
@@ -29,22 +37,15 @@
 				<artifactId>maven-bundle-plugin</artifactId>
 				<version>2.5.4</version>
 				<extensions>true</extensions>
-				<executions>
-					<execution>
-						<id>bundle-manifest</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>manifest</goal>
-						</goals>
-					</execution>
-				</executions>
 				<configuration>
 					<instructions>
-						<import-package>!*</import-package>
-						<!-- embed all compile and runtime scope dependencies -->
+						<Import-Package>!*</Import-Package>
+						<DynamicImport-Package>
+							*;resolution:=optional
+						</DynamicImport-Package>
+						<Bundle-Version>1.0.0</Bundle-Version>
 						<Embed-Dependency>*;scope=compile|runtime;inline=true</Embed-Dependency>
-						<!-- the host for this fragment bundle -->
-						<fragment-Host>org.ops4j.pax.logging.pax-logging-service</fragment-Host>
+						<Fragment-Host>org.apache.logging.log4j.api</Fragment-Host>
 					</instructions>
 				</configuration>
 			</plugin>

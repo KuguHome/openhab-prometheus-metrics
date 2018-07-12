@@ -1,57 +1,73 @@
 package org.eclipse.io.prometheusmetrics.log4j2;
 
-import java.io.Serializable;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import static org.apache.logging.log4j.Level.*;
 
-import org.apache.logging.log4j.core.Filter;
-import org.apache.logging.log4j.core.Layout;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
-import org.apache.logging.log4j.core.config.plugins.PluginElement;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
-import org.apache.logging.log4j.core.layout.PatternLayout;
 
-@Plugin(name = "KuguAppender", category = "Core", elementType = "appender", printObject = true)
+import io.prometheus.client.Counter;
+
+@Plugin(name = "Kugu", category = "Core", elementType = "appender", printObject = true)
 public class KuguAppender extends AbstractAppender {
 
-    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
-    private final Lock readLock = rwLock.readLock();
+    public static final String COUNTER_NAME = "log4j2_appender_total";
 
-    protected KuguAppender(String name, Filter filter, Layout<? extends Serializable> layout,
-            final boolean ignoreExceptions) {
-        super(name, filter, layout, ignoreExceptions);
+    private static final Counter COUNTER;
+    private static final Counter.Child TRACE_LABEL;
+    private static final Counter.Child DEBUG_LABEL;
+    private static final Counter.Child INFO_LABEL;
+    private static final Counter.Child WARN_LABEL;
+    private static final Counter.Child ERROR_LABEL;
+    private static final Counter.Child FATAL_LABEL;
+
+    static {
+        COUNTER = Counter.build().name(COUNTER_NAME).help("Log4j2 log statements at various log levels")
+                .labelNames("level").register();
+
+        TRACE_LABEL = COUNTER.labels("trace");
+        DEBUG_LABEL = COUNTER.labels("debug");
+        INFO_LABEL = COUNTER.labels("info");
+        WARN_LABEL = COUNTER.labels("warn");
+        ERROR_LABEL = COUNTER.labels("error");
+        FATAL_LABEL = COUNTER.labels("fatal");
+    }
+
+    /**
+     * Create a new instrumented appender using the default registry.
+     */
+    public KuguAppender(String name) {
+        super(name, null, null);
     }
 
     @Override
     public void append(LogEvent event) {
-        readLock.lock();
-        try {
-            final byte[] bytes = getLayout().toByteArray(event);
-            System.out.write(bytes);
-        } catch (Exception ex) {
-            if (!ignoreExceptions()) {
-            }
-        } finally {
-            readLock.unlock();
+        Level level = event.getLevel();
+        if (TRACE.equals(level)) {
+            TRACE_LABEL.inc();
+        } else if (DEBUG.equals(level)) {
+            DEBUG_LABEL.inc();
+        } else if (INFO.equals(level)) {
+            INFO_LABEL.inc();
+        } else if (WARN.equals(level)) {
+            WARN_LABEL.inc();
+        } else if (ERROR.equals(level)) {
+            ERROR_LABEL.inc();
+        } else if (FATAL.equals(level)) {
+            FATAL_LABEL.inc();
         }
-
     }
 
     @PluginFactory
-    public static KuguAppender createAppender(@PluginAttribute("name") String name,
-            @PluginElement("Layout") Layout<? extends Serializable> layout,
-            @PluginElement("Filter") final Filter filter, @PluginAttribute("otherAttribute") String otherAttribute) {
+    public static KuguAppender createAppender(@PluginAttribute("name") String name) {
         if (name == null) {
+            LOGGER.error("No name provided for InstrumentedAppender");
             return null;
         }
-        if (layout == null) {
-            layout = PatternLayout.createDefaultLayout();
-        }
-        return new KuguAppender(name, filter, layout, true);
+        return new KuguAppender(name);
     }
 
 }

@@ -56,7 +56,6 @@ Import-Package:
  org.slf4j
 Service-Component: OSGI-INF/*.xml
 Automatic-Module-Name: org.eclipse.io.prometheusmetrics
-Require-Bundle: system.bundle,
- org.apache.logging.log4j.core;bundle-version="2.1.0"
+Require-Bundle: system.bundle
 
 
