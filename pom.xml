@@ -19,6 +19,7 @@
 		<module>org.eclipse.io.prometheusmetrics</module>
 		<module>org.eclipse.io.prometheusmetrics.appender</module>
 		<module>org.eclipse.io.prometheusmetrics.target</module>
+		<module>org.eclipse.io.prometheusmetrics.log4j2fragment</module>
 	</modules>
 
 	<build>
