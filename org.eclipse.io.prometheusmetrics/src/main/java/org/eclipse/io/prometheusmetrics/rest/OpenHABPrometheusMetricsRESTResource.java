@@ -17,7 +17,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.LogManager;
 import java.util.stream.Stream;
 
 import javax.annotation.security.RolesAllowed;
@@ -30,10 +29,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.appender.ConsoleAppender;
-import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.smarthome.config.discovery.DiscoveryResult;
 import org.eclipse.smarthome.config.discovery.inbox.Inbox;
@@ -56,6 +51,7 @@ import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.prometheus.client.CollectorRegistry;
@@ -167,14 +163,20 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
 
     @Activate
     protected void activate() {
-        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-        Configuration config = ctx.getConfiguration();
-        ConsoleAppender consoleAppender = ConsoleAppender
-                .createDefaultAppenderForLayout(PatternLayout.createDefaultLayout());
-        consoleAppender.start(); // this is optional
-        config.addAppender(consoleAppender); // this is optional
-        ctx.getRootLogger().addAppender(consoleAppender);
-        ctx.updateLoggers();
+        /*
+         * KuguAppender k;
+         *
+         * LoggerContext logCtx = LoggerFactory.getILoggerFactory();
+         *
+         * LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+         * Configuration config = ctx.getConfiguration();
+         * ConsoleAppender consoleAppender = ConsoleAppender
+         * .createDefaultAppenderForLayout(PatternLayout.createDefaultLayout());
+         * consoleAppender.start(); // this is optional
+         * config.addAppender(consoleAppender); // this is optional
+         * ctx.getRootLogger().addAppender(consoleAppender);
+         * ctx.updateLoggers();
+         */
 
         try {
             httpService.registerResources(METRICS_ALIAS, "web", null);
