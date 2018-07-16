@@ -4,7 +4,7 @@ Bundle-ClassPath: .
 Bundle-ManifestVersion: 2
 Bundle-Name: OpenHABPrometheusMetrics Misc
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-SymbolicName: org.eclipse.io.prometheusmetrics;singleton:=true
+Bundle-SymbolicName: com.kuguhome.openhab.prometheusmetrics;singleton:=true
 Bundle-Vendor: openHAB
 Bundle-Version: 2.4.0.qualifier
 Import-Package: 
@@ -58,7 +58,7 @@ Import-Package:
  org.osgi.service.http;version="1.2.1",
  org.slf4j
 Service-Component: OSGI-INF/*.xml
-Automatic-Module-Name: org.eclipse.io.prometheusmetrics
+Automatic-Module-Name: com.kuguhome.openhab.prometheusmetrics
 Require-Bundle: system.bundle
 
 

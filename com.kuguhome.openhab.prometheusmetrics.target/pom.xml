@@ -4,13 +4,13 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.eclipse.io.prometheusmetrics</groupId>
-		<artifactId>org.eclipse.io.prometheusmetrics.parent</artifactId>
+		<groupId>com.kuguhome.openhab.prometheusmetrics</groupId>
+		<artifactId>com.kuguhome.openhab.prometheusmetrics.parent</artifactId>
 		<version>2.4.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.eclipse.io.prometheusmetrics</groupId>
-	<artifactId>org.eclipse.io.prometheusmetrics.target</artifactId>
+	<groupId>com.kuguhome.openhab.prometheusmetrics</groupId>
+	<artifactId>com.kuguhome.openhab.prometheusmetrics.target</artifactId>
 	<version>2.4.0-SNAPSHOT</version>
 	<packaging>eclipse-target-definition</packaging>
 

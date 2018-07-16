@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="org.eclipse.io.prometheusmetrics.rest.OpenHABPrometheusMetricsRESTResource">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="com.kuguhome.openhab.prometheusmetrics.rest.OpenHABPrometheusMetricsRESTResource">
    <service>
       <provide interface="org.eclipse.smarthome.core.events.EventSubscriber"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
@@ -10,5 +10,5 @@
    <reference bind="setHttpService" interface="org.osgi.service.http.HttpService" name="HttpService" unbind="unsetHttpService"/>
    <reference bind="setInbox" cardinality="0..1" interface="org.eclipse.smarthome.config.discovery.inbox.Inbox" name="Inbox" policy="dynamic" unbind="unsetInbox"/>
    <reference bind="setThingRegistry" interface="org.eclipse.smarthome.core.thing.ThingRegistry" name="ThingRegistry" unbind="unsetThingRegistry"/>
-   <implementation class="org.eclipse.io.prometheusmetrics.rest.OpenHABPrometheusMetricsRESTResource"/>
+   <implementation class="com.kuguhome.openhab.prometheusmetrics.rest.OpenHABPrometheusMetricsRESTResource"/>
 </scr:component>

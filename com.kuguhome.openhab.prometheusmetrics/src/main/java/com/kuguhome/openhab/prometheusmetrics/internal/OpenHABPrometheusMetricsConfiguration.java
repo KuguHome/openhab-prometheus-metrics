@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.io.prometheusmetrics.internal;
+package com.kuguhome.openhab.prometheusmetrics.internal;
 
 /**
  * The {@link OpenHABPrometheusMetricsConfiguration} class contains fields mapping thing configuration parameters.

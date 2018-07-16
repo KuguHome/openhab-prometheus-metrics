@@ -10,9 +10,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.io.prometheusmetrics.internal;
+package com.kuguhome.openhab.prometheusmetrics.internal;
 
-import static org.eclipse.io.prometheusmetrics.internal.OpenHABPrometheusMetricsBindingConstants.CHANNEL_1;
+import static com.kuguhome.openhab.prometheusmetrics.internal.OpenHABPrometheusMetricsBindingConstants.CHANNEL_1;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;

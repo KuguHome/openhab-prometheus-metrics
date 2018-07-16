@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.eclipse.io.prometheusmetrics.rest;
+package com.kuguhome.openhab.prometheusmetrics.rest;
 
 import java.io.StringWriter;
 import java.lang.ref.WeakReference;

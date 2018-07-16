@@ -10,9 +10,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.io.prometheusmetrics.internal;
+package com.kuguhome.openhab.prometheusmetrics.internal;
 
-import static org.eclipse.io.prometheusmetrics.internal.OpenHABPrometheusMetricsBindingConstants.THING_TYPE_SAMPLE;
+import static com.kuguhome.openhab.prometheusmetrics.internal.OpenHABPrometheusMetricsBindingConstants.THING_TYPE_SAMPLE;
 
 import java.util.Collections;
 import java.util.Set;
