@@ -9,6 +9,9 @@ Bundle-Vendor: openHAB
 Bundle-Version: 2.4.0.qualifier
 Import-Package: 
  ch.qos.logback.classic;version="1.0.7",
+ ch.qos.logback.classic.spi;version="1.0.7",
+ ch.qos.logback.core;version="1.0.7",
+ ch.qos.logback.core.spi;version="1.0.7",
  io.prometheus.client,
  io.prometheus.client.exporter.common,
  io.swagger.annotations;version="1.5.7.SNAPSHOT",

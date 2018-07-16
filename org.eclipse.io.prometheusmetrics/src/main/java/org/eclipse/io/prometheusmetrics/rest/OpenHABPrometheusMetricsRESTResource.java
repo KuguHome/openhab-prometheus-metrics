@@ -51,10 +51,15 @@ import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import io.prometheus.client.CollectorRegistry;
+import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Gauge.Child;
 import io.prometheus.client.exporter.common.TextFormat;
@@ -76,18 +81,29 @@ import io.swagger.annotations.ApiResponses;
 public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
         implements RESTResource, EventHandler, EventSubscriber {
 
-    private final Logger logger = LoggerFactory.getLogger(OpenHABPrometheusMetricsRESTResource.class);
+    private final Logger logger = (Logger) LoggerFactory.getLogger(OpenHABPrometheusMetricsRESTResource.class);
 
     public static final String METRICS_ALIAS = "/metrics";
+    public static final String COUNTER_NAME = "logback_appender_total";
 
-    private final Gauge openhabThingState = Gauge.build("openhab_thing_state", "openHAB Things state")
+    private final static Gauge openhabThingState = Gauge.build("openhab_thing_state", "openHAB Things state")
             .labelNames("thing").register(CollectorRegistry.defaultRegistry);
-    private final Gauge openhabBundleState = Gauge.build("openhab_bundle_state", "openHAB OSGi bundles state")
+    private final static Gauge openhabBundleState = Gauge.build("openhab_bundle_state", "openHAB OSGi bundles state")
             .labelNames("bundle").register(CollectorRegistry.defaultRegistry);
-    private final Gauge openhabInboxCount = Gauge.build("openhab_inbox_count", "openHAB inbox count")
+    private final static Gauge openhabInboxCount = Gauge.build("openhab_inbox_count", "openHAB inbox count")
             .register(CollectorRegistry.defaultRegistry);
-    private final Gauge smarthomeEventCount = Gauge.build("smarthome_event_count", "openHAB event count")
+    private final static Gauge smarthomeEventCount = Gauge.build("smarthome_event_count", "openHAB event count")
             .labelNames("source").register(CollectorRegistry.defaultRegistry);
+
+    private final static Counter logCounter = Counter
+            .build("openhab_logmessages_total", "Logback log statements at various log levels").labelNames("level")
+            .register(CollectorRegistry.defaultRegistry);
+
+    public static final Counter.Child TRACE_LABEL = logCounter.labels("trace");
+    public static final Counter.Child DEBUG_LABEL = logCounter.labels("debug");
+    public static final Counter.Child INFO_LABEL = logCounter.labels("info");
+    public static final Counter.Child WARN_LABEL = logCounter.labels("warn");
+    public static final Counter.Child ERROR_LABEL = logCounter.labels("error");
 
     public static final String PATH_HABMETRICS = "metrics";
 
@@ -109,6 +125,16 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
             @ApiResponse(code = 404, message = "Unknown page") })
     public Response getThingsMetricsPrometheus(@Context HttpServletRequest request,
             @Context HttpServletResponse response) throws Exception {
+
+        /*
+         * LoggerContext lc = logger.getLoggerContext();
+         * List<String> strList = new ArrayList<String>();
+         * Iterator<ch.qos.logback.classic.Logger> it = lc.getLoggerList().iterator();
+         * while (it.hasNext()) {
+         * Logger log = it.next();
+         * strList.add(log.getName());
+         * }
+         */
 
         List<DiscoveryResult> inboxList = inbox.getAll();
         {
@@ -163,6 +189,14 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
 
     @Activate
     protected void activate() {
+        // SLF4JBridgeHandler.removeHandlersForRootLogger();
+        // SLF4JBridgeHandler.install();
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        Logger root = lc.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+        KuguAppender kuguAppender = new KuguAppender();
+        kuguAppender.setContext(lc);
+        kuguAppender.start();
+        root.addAppender(kuguAppender);
         /*
          * KuguAppender k;
          *
@@ -270,6 +304,58 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
     @Override
     public EventFilter getEventFilter() {
         return null;
+    }
+
+    /*
+     * List<String> findNamesOfConfiguredAppenders() {
+     * LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+     * List<String> strList = new ArrayList<String>();
+     * for (ch.qos.logback.classic.Logger log : lc.getLoggerList()) {
+     * if (log.getLevel() != null || hasAppenders(log)) {
+     * strList.add(log.getName());
+     * }
+     * }
+     * return strList;
+     * }
+     */
+
+    /*
+     * boolean hasAppenders(ch.qos.logback.classic.Logger logger) {
+     * Iterator<Appender<LoggingEvent>> it = logger.iteratorForAppenders();
+     * return it.hasNext();
+     * }
+     */
+
+    class KuguAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
+
+        @Override
+        public void start() {
+            super.start();
+            System.out.println("KuguAppender STARTED");
+        }
+
+        @Override
+        protected void append(ILoggingEvent event) {
+            switch (event.getLevel().toInt()) {
+                case Level.TRACE_INT:
+                    TRACE_LABEL.inc();
+                    break;
+                case Level.DEBUG_INT:
+                    DEBUG_LABEL.inc();
+                    break;
+                case Level.INFO_INT:
+                    INFO_LABEL.inc();
+                    break;
+                case Level.WARN_INT:
+                    WARN_LABEL.inc();
+                    break;
+                case Level.ERROR_INT:
+                    ERROR_LABEL.inc();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
 }
