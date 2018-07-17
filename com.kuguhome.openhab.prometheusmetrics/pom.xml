@@ -1,89 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.kuguhome.openhab.prometheusmetrics</groupId>
-        <artifactId>com.kuguhome.openhab.prometheusmetrics.parent</artifactId>
-        <version>2.4.0-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>com.kuguhome.openhab.prometheusmetrics</groupId>
+		<artifactId>com.kuguhome.openhab.prometheusmetrics.parent</artifactId>
+		<version>2.4.0-SNAPSHOT</version>
+	</parent>
 
-    <groupId>com.kuguhome.openhab.prometheusmetrics</groupId>
-    <artifactId>com.kuguhome.openhab.prometheusmetrics</artifactId>
-    <packaging>eclipse-plugin</packaging>
-    <name>OpenHABPrometheusMetrics Misc</name>
+	<groupId>com.kuguhome.openhab.prometheusmetrics</groupId>
+	<artifactId>com.kuguhome.openhab.prometheusmetrics</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<name>OpenHABPrometheusMetrics Misc</name>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>tycho-surefire-plugin</artifactId>
-                <version>${tycho-version}</version>
-                <executions>
-                    <execution>
-                        <id>unit-tests</id>
-                        <phase>test-compile</phase>
-                        <configuration>
-                            <includes>
-                                <include>**/*Test.class</include>
-                            </includes>
-                        </configuration>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
-                <executions>
-                    <execution>
-                        <id>test</id>
-                        <phase>test</phase>
-                        <configuration>
-                            <includes>
-                                <include>**/*Test.java</include>
-                            </includes>
-                        </configuration>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>compiletests</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-    <dependencies>
-    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
-<dependency>
-    <groupId>org.apache.logging.log4j</groupId>
-    <artifactId>log4j-core</artifactId>
-    <version>2.11.0</version>
-</dependency>
-    
-        <dependency>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>unit-tests</id>
+						<phase>test-compile</phase>
+						<configuration>
+							<includes>
+								<include>**/*Test.class</include>
+							</includes>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19.1</version>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>test</phase>
+						<configuration>
+							<includes>
+								<include>**/*Test.java</include>
+							</includes>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+				<executions>
+					<execution>
+						<id>compiletests</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>io.prometheus</groupId>
 			<artifactId>simpleclient</artifactId>
 			<version>0.4.0</version>
@@ -94,23 +94,23 @@
 			<version>0.4.0</version>
 		</dependency>
 		<dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.2</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.10.19</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.2</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 </project>
