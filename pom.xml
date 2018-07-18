@@ -18,8 +18,23 @@
 		<module>com.kuguhome.openhab.prometheusmetrics.p2site</module>
 		<module>com.kuguhome.openhab.prometheusmetrics</module>
 		<module>com.kuguhome.openhab.prometheusmetrics.target</module>
-		<module>com.kuguhome.openhab.prometheusmetrics.log4j2fragment</module>
+		<module>com.kuguhome.openhab.prometheusmetrics.logbackfragment</module>
 	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>1.0.7</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>1.0.7</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>

@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.eclipse.io.prometheusmetrics</groupId>
-		<artifactId>org.eclipse.io.prometheusmetrics.parent</artifactId>
+		<groupId>com.kuguhome.openhab.prometheusmetrics</groupId>
+		<artifactId>com.kuguhome.openhab.prometheusmetrics.parent</artifactId>
 		<version>2.4.0-SNAPSHOT</version>
 	</parent>
-
-	<artifactId>org.eclipse.io.prometheusmetrics.logbackfragment</artifactId>
+        
+        <artifactId>com.kuguhome.openhab.prometheusmetrics.logbackfragment</artifactId>
 	<packaging>bundle</packaging>
 	<name>KuguLogback Appender</name>
 	<version>1.0.0</version>
@@ -20,26 +20,21 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>1.0.7</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.0.7</version>
 		</dependency>
-
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_common</artifactId>
+            <version>0.4.0</version>
+        </dependency>
 		<dependency>
 			<groupId>io.prometheus</groupId>
 			<artifactId>simpleclient</artifactId>
 			<version>0.4.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.prometheus/simpleclient_log4j2 -->
-		<dependency>
-			<groupId>io.prometheus</groupId>
-			<artifactId>simpleclient_logback</artifactId>
-			<version>0.4.0-KUGU-LOGBACK-1-0-7-VERSION</version>
-
 		</dependency>
 
 	</dependencies>
@@ -53,10 +48,10 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Export-Package>io.prometheus.client.logback;version=0.4.0,org.eclipse.io.prometheusmetrics.logback;version=1.0.0</Export-Package>
+						<Export-Package>*</Export-Package>
 						<Import-Package>!*</Import-Package>
 						<Embed-Dependency>*;scope=compile|runtime;inline=true</Embed-Dependency>
-						<Fragment-Host>ch.qos.logback.classic</Fragment-Host>
+<!-- 						<Fragment-Host>ch.qos.logback.classic</Fragment-Host> -->
 					</instructions>
 				</configuration>
 			</plugin>

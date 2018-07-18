@@ -1,4 +1,4 @@
-package org.eclipse.io.prometheusmetrics;
+package com.kuguhome.openhab.prometheusmetrics;
 
 import static org.junit.Assert.assertEquals;
 

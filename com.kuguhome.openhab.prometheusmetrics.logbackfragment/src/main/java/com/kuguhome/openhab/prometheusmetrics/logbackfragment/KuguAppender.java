@@ -1,4 +1,4 @@
-package org.eclipse.io.prometheusmetrics.logback;
+package com.kuguhome.openhab.prometheusmetrics.logbackfragment;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
