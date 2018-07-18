@@ -4,7 +4,7 @@
       <provide interface="org.eclipse.smarthome.core.events.EventSubscriber"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
       <provide interface="org.eclipse.smarthome.io.rest.RESTResource"/>
-      <provide interface="org.eclipse.io.prometheusmetrics.rest.OpenHABPrometheusMetricsRESTResource"/>
+      <provide interface="com.kuguhome.openhab.prometheusmetrics.rest.OpenHABPrometheusMetricsRESTResource"/>
    </service>
    <reference bind="setEventSubscriber" interface="org.eclipse.smarthome.core.events.EventSubscriber" name="EventSubscriber"/>
    <reference bind="setHttpService" interface="org.osgi.service.http.HttpService" name="HttpService" unbind="unsetHttpService"/>
