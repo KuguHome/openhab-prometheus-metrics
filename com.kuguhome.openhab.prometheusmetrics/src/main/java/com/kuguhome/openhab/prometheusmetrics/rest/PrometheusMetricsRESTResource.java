@@ -70,14 +70,13 @@ import io.swagger.annotations.ApiResponses;
  * @author Roman Malyugin - Initial contribution
  *
  */
-@Path(OpenHABPrometheusMetricsRESTResource.PATH_HABMETRICS)
-@Api(OpenHABPrometheusMetricsRESTResource.PATH_HABMETRICS)
+@Path(PrometheusMetricsRESTResource.PATH_HABMETRICS)
+@Api(PrometheusMetricsRESTResource.PATH_HABMETRICS)
 @Component(service = { EventSubscriber.class, EventHandler.class, RESTResource.class,
-        OpenHABPrometheusMetricsRESTResource.class })
-public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
-        implements RESTResource, EventHandler, EventSubscriber {
+        PrometheusMetricsRESTResource.class })
+public class PrometheusMetricsRESTResource implements RESTResource, EventHandler, EventSubscriber {
 
-    private final Logger logger = LoggerFactory.getLogger(OpenHABPrometheusMetricsRESTResource.class);
+    private final Logger logger = LoggerFactory.getLogger(PrometheusMetricsRESTResource.class);
 
     public static final String METRICS_ALIAS = "/metrics";
     public static final String COUNTER_NAME = "logback_appender_total";
@@ -109,12 +108,8 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
     private ThingRegistry thingRegistry;
     private Inbox inbox;
     protected HttpService httpService;
-    // private EventAdmin eventAdmin;
     private EventHandler eventHandler;
     private EventSubscriber eventSubscriber;
-
-    // private KuguAppender kuguAppender;
-
     private Map<String, Queue<WeakReference<org.eclipse.smarthome.core.events.@NonNull Event>>> smarthomeEventCache = new ConcurrentHashMap<>();
 
     @GET
@@ -126,24 +121,6 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
             @ApiResponse(code = 404, message = "Unknown page") })
     public Response getThingsMetricsPrometheus(@Context HttpServletRequest request,
             @Context HttpServletResponse response) throws Exception {
-
-        /*
-         * LoggerContext lc = logger.getLoggerContext();
-         * List<String> strList = new ArrayList<String>();
-         * Iterator<ch.qos.logback.classic.Logger> it = lc.getLoggerList().iterator();
-         * while (it.hasNext()) {
-         * Logger log = it.next();
-         * strList.add(log.getName());
-         * }
-         */
-
-        // kuguAppender.errorMessageList.stream().collect(Collectors.groupingBy(LogEntry::getKlass,
-        // Collectors.counting()))
-        // .forEach((k, c) -> {
-        // Child child = new Child();
-        // child.set(c);
-        // logErrorCounter.setChild(child, k);
-        // });
 
         List<DiscoveryResult> inboxList = inbox.getAll();
         {
@@ -158,23 +135,13 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
             smarthomeEventCount.setChild(child, s);
         });
 
-        /*
-         * for (DiscoveryResult discoveryResult : inboxList) {
-         * Child child = new Child();
-         * child.set(discoveryResult.ge().ordinal());
-         * discoveryResult.getLabel();
-         * openhabThingState.setChild(child, thing.getUID().getAsString());
-         * }
-         */
-
         thingRegistry.getAll().parallelStream().forEach(t -> {
             Child child = new Child();
             child.set(t.getStatus().ordinal());
             openhabThingState.setChild(child, t.getUID().getAsString());
         });
 
-        Bundle[] bundles = FrameworkUtil.getBundle(OpenHABPrometheusMetricsRESTResource.class).getBundleContext()
-                .getBundles();
+        Bundle[] bundles = FrameworkUtil.getBundle(PrometheusMetricsRESTResource.class).getBundleContext().getBundles();
         Stream.of(bundles).parallel().forEach(b -> {
             Child child = new Child();
             child.set(b.getState());
@@ -198,29 +165,6 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
 
     @Activate
     protected void activate() {
-        // SLF4JBridgeHandler.removeHandlersForRootLogger();
-        // SLF4JBridgeHandler.install();
-        // LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        // Logger root = lc.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-        // kuguAppender = new KuguAppender();
-        // kuguAppender.setContext(lc);
-        // kuguAppender.start();
-        // root.addAppender(kuguAppender);
-        /*
-         * KuguAppender k;
-         *
-         * LoggerContext logCtx = LoggerFactory.getILoggerFactory();
-         *
-         * LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-         * Configuration config = ctx.getConfiguration();
-         * ConsoleAppender consoleAppender = ConsoleAppender
-         * .createDefaultAppenderForLayout(PatternLayout.createDefaultLayout());
-         * consoleAppender.start(); // this is optional
-         * config.addAppender(consoleAppender); // this is optional
-         * ctx.getRootLogger().addAppender(consoleAppender);
-         * ctx.updateLoggers();
-         */
-
         try {
             httpService.registerResources(METRICS_ALIAS, "web", null);
             logger.info("Started Metrics at " + METRICS_ALIAS);
@@ -252,16 +196,6 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
     protected void unsetInbox(Inbox inbox) {
         this.inbox = null;
     }
-
-    // @Reference
-    // public void setEventAdmin(EventAdmin eventAdmin) {
-    // this.eventAdmin = eventAdmin;
-    // }
-    //
-    // public void unsetEventAdmin(EventAdmin eventAdmin) {
-    // this.eventAdmin = null;
-    // }
-    //
 
     public void unsetEventSubscriber() {
         this.eventSubscriber = null;
@@ -314,131 +248,5 @@ public class OpenHABPrometheusMetricsRESTResource /* extends EventBridge */
     public EventFilter getEventFilter() {
         return null;
     }
-
-    // List<String> findNamesOfConfiguredAppenders() {
-    // LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-    // List<String> strList = new ArrayList<String>();
-    // for (ch.qos.logback.classic.Logger log : lc.getLoggerList()) {
-    // if (log.getLevel() != null || hasAppenders(log)) {
-    // strList.add(log.getName());
-    // }
-    // }
-    // return strList;
-    // }
-    //
-    // boolean hasAppenders(ch.qos.logback.classic.Logger logger) {
-    // Iterator<Appender<ILoggingEvent>> it = logger.iteratorForAppenders();
-    // return it.hasNext();
-    // }
-
-    // class KuguAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
-    //
-    // private List<LogEntry> errorMessageList = new LinkedList<>();
-    //
-    // @Override
-    // public void start() {
-    // super.start();
-    // System.out.println("KuguAppender STARTED");
-    // }
-    //
-    // @Override
-    // protected void append(ILoggingEvent event) {
-    // switch (event.getLevel().toInt()) {
-    // case Level.TRACE_INT:
-    // TRACE_LABEL.inc();
-    // break;
-    // case Level.DEBUG_INT:
-    // DEBUG_LABEL.inc();
-    // break;
-    // case Level.INFO_INT:
-    // INFO_LABEL.inc();
-    // break;
-    // case Level.WARN_INT:
-    // WARN_LABEL.inc();
-    // break;
-    // case Level.ERROR_INT:
-    // errorMessageList.add(new LogEntry(event.getLoggerName(), event.getMessage()));
-    // ERROR_LABEL.inc();
-    // break;
-    // default:
-    // break;
-    // }
-    // }
-    //
-    // }
-    //
-    // class LogEntry {
-    // private String klass;
-    // private String message;
-    //
-    // public LogEntry(String klass, String message) {
-    // super();
-    // this.klass = klass;
-    // this.message = message;
-    // }
-    //
-    // public String getKlass() {
-    // return klass;
-    // }
-    //
-    // public void setKlass(String klass) {
-    // this.klass = klass;
-    // }
-    //
-    // public String getMessage() {
-    // return message;
-    // }
-    //
-    // public void setMessage(String message) {
-    // this.message = message;
-    // }
-    //
-    // @Override
-    // public int hashCode() {
-    // final int prime = 31;
-    // int result = 1;
-    // result = prime * result + getOuterType().hashCode();
-    // result = prime * result + ((klass == null) ? 0 : klass.hashCode());
-    // result = prime * result + ((message == null) ? 0 : message.hashCode());
-    // return result;
-    // }
-    //
-    // @Override
-    // public boolean equals(Object obj) {
-    // if (this == obj) {
-    // return true;
-    // }
-    // if (obj == null) {
-    // return false;
-    // }
-    // if (getClass() != obj.getClass()) {
-    // return false;
-    // }
-    // LogEntry other = (LogEntry) obj;
-    // if (!getOuterType().equals(other.getOuterType())) {
-    // return false;
-    // }
-    // if (klass == null) {
-    // if (other.klass != null) {
-    // return false;
-    // }
-    // } else if (!klass.equals(other.klass)) {
-    // return false;
-    // }
-    // if (message == null) {
-    // if (other.message != null) {
-    // return false;
-    // }
-    // } else if (!message.equals(other.message)) {
-    // return false;
-    // }
-    // return true;
-    // }
-    //
-    // private OpenHABPrometheusMetricsRESTResource getOuterType() {
-    // return OpenHABPrometheusMetricsRESTResource.this;
-    // }
-    //
-    // }
 
 }

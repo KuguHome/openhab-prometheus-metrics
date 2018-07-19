@@ -7,6 +7,7 @@
     <artifactId>com.kuguhome.openhab.prometheusmetrics.p2-site</artifactId>
     <packaging>pom</packaging>
     <version>2.4.0-SNAPSHOT</version>
+    <name>KuguHome PrometheusMetrics P2-Site</name>
 
     <build>
         <plugins>

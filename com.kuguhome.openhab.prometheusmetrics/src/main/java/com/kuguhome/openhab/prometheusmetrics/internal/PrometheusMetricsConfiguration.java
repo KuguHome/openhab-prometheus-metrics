@@ -13,11 +13,11 @@
 package com.kuguhome.openhab.prometheusmetrics.internal;
 
 /**
- * The {@link OpenHABPrometheusMetricsConfiguration} class contains fields mapping thing configuration parameters.
+ * The {@link PrometheusMetricsConfiguration} class contains fields mapping thing configuration parameters.
  *
  * @author Roman Malyugin - Initial contribution
  */
-public class OpenHABPrometheusMetricsConfiguration {
+public class PrometheusMetricsConfiguration {
 
     /**
      * Sample configuration parameter. Replace with your own.

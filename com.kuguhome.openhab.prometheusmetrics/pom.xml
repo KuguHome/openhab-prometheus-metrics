@@ -10,17 +10,15 @@
 		<version>2.4.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.kuguhome.openhab.prometheusmetrics</groupId>
 	<artifactId>com.kuguhome.openhab.prometheusmetrics</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<name>OpenHABPrometheusMetrics Misc</name>
+	<name>KuguHome PrometheusMetrics Misc</name>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
-				<version>${tycho-version}</version>
 				<executions>
 					<execution>
 						<id>unit-tests</id>
@@ -76,11 +74,6 @@
 		</plugins>
 	</build>
 	<dependencies>
-<!-- <dependency>
-			<groupId>com.kuguhome.openhab.prometheusmetrics</groupId>
-			<artifactId>com.kuguhome.openhab.prometheusmetrics.logbackfragment</artifactId>
-			<version>1.0.0</version>
-		</dependency> -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>

@@ -12,7 +12,7 @@
  */
 package com.kuguhome.openhab.prometheusmetrics.internal;
 
-import static com.kuguhome.openhab.prometheusmetrics.internal.OpenHABPrometheusMetricsBindingConstants.CHANNEL_1;
+import static com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsBindingConstants.CHANNEL_1;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
@@ -25,20 +25,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link OpenHABPrometheusMetricsHandler} is responsible for handling commands, which are
+ * The {@link PrometheusMetricsHandler} is responsible for handling commands, which are
  * sent to one of the channels.
  *
  * @author Roman Malyugin - Initial contribution
  */
 @NonNullByDefault
-public class OpenHABPrometheusMetricsHandler extends BaseThingHandler {
+public class PrometheusMetricsHandler extends BaseThingHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(OpenHABPrometheusMetricsHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(PrometheusMetricsHandler.class);
 
     @Nullable
-    private OpenHABPrometheusMetricsConfiguration config;
+    private PrometheusMetricsConfiguration config;
 
-    public OpenHABPrometheusMetricsHandler(Thing thing) {
+    public PrometheusMetricsHandler(Thing thing) {
         super(thing);
     }
 
@@ -56,7 +56,7 @@ public class OpenHABPrometheusMetricsHandler extends BaseThingHandler {
 
     @Override
     public void initialize() {
-        config = getConfigAs(OpenHABPrometheusMetricsConfiguration.class);
+        config = getConfigAs(PrometheusMetricsConfiguration.class);
 
         // TODO: Initialize the thing. If done set status to ONLINE to indicate proper working.
         // Long running initialization should be done asynchronously in background.

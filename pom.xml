@@ -8,6 +8,8 @@
 	<version>2.4.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<name>KuguHome PrometheusMetrics Parent</name>
+
 	<properties>
 		<tycho-version>0.25.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,7 +20,7 @@
 		<module>com.kuguhome.openhab.prometheusmetrics.p2site</module>
 		<module>com.kuguhome.openhab.prometheusmetrics</module>
 		<module>com.kuguhome.openhab.prometheusmetrics.target</module>
-		<module>com.kuguhome.openhab.prometheusmetrics.logbackfragment</module>
+		<module>com.kuguhome.openhab.prometheusmetrics.systemfragment</module>
 	</modules>
 
 	<dependencyManagement>

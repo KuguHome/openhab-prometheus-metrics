@@ -9,7 +9,7 @@
  
     <artifactId>com.kuguhome.openhab.prometheusmetrics.systemfragment</artifactId>
     <packaging>jar</packaging>
-    <name>System Bundle Fragment exporting sun.misc</name>
+    <name>KuguHome OpenHAB PrometheusMetrics System Fragment</name>
  
     <description>This bundle extends the System Bundle export list with the sun.misc package such that OSGi bundles may refer to Sun's misc implementation without the OSGi framework itself to provide it in a non-portable way.</description>
  

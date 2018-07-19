@@ -12,7 +12,7 @@
  */
 package com.kuguhome.openhab.prometheusmetrics.internal;
 
-import static com.kuguhome.openhab.prometheusmetrics.internal.OpenHABPrometheusMetricsBindingConstants.THING_TYPE_SAMPLE;
+import static com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsBindingConstants.THING_TYPE_SAMPLE;
 
 import java.util.Collections;
 import java.util.Set;
@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link OpenHABPrometheusMetricsHandlerFactory} is responsible for creating things and thing
+ * The {@link PrometheusMetricsHandlerFactory} is responsible for creating things and thing
  * handlers.
  *
  * @author Roman Malyugin - Initial contribution
@@ -39,11 +39,11 @@ import org.slf4j.LoggerFactory;
 @NonNullByDefault
 @Component(configurationPid = "binding.openhabprometheusmetrics", service = { EventHandler.class,
         ThingHandlerFactory.class })
-public class OpenHABPrometheusMetricsHandlerFactory extends BaseThingHandlerFactory implements EventHandler {
+public class PrometheusMetricsHandlerFactory extends BaseThingHandlerFactory implements EventHandler {
 
     private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_SAMPLE);
 
-    private final Logger logger = LoggerFactory.getLogger(OpenHABPrometheusMetricsHandlerFactory.class);
+    private final Logger logger = LoggerFactory.getLogger(PrometheusMetricsHandlerFactory.class);
 
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
@@ -55,7 +55,7 @@ public class OpenHABPrometheusMetricsHandlerFactory extends BaseThingHandlerFact
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
         if (THING_TYPE_SAMPLE.equals(thingTypeUID)) {
-            return new OpenHABPrometheusMetricsHandler(thing);
+            return new PrometheusMetricsHandler(thing);
         }
 
         return null;

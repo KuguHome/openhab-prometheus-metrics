@@ -16,13 +16,13 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 
 /**
- * The {@link OpenHABPrometheusMetricsBindingConstants} class defines common constants, which are
+ * The {@link PrometheusMetricsBindingConstants} class defines common constants, which are
  * used across the whole binding.
  *
  * @author Roman Malyugin - Initial contribution
  */
 @NonNullByDefault
-public class OpenHABPrometheusMetricsBindingConstants {
+public class PrometheusMetricsBindingConstants {
 
     private static final String BINDING_ID = "openhabprometheusmetrics";
 
