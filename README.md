@@ -1,13 +1,19 @@
 ## openHAB bundle for Prometheus metrics
 
 ### Development with Eclipse IDE
-* Setting up the openHAB IDE https://www.openhab.org/docs/developer/development/ide.html#prerequisites
+
+* Setting up the openHAB IDE
+
+```
+https://www.openhab.org/docs/developer/development/ide.html#prerequisites
+```
 
 You should have your IDE almost the same as on picture (if you select all projects to import in bullet above):
 ![Eclipse IDE with OH projects](img/eclipse_ide_oh.png =500x)
 
 We would suggest to import not all to increase local build process:
 ![Eclipse IDE with OH projects (ligth)](img/eclipse_ide_oh_light.png =500x)
+ and plus 2 plugins at the bottom
 
 * Import Kugu projects into IDE:
 File -> Open Projects From File System...
@@ -29,23 +35,24 @@ Click Debug -> Debug Configuration and select all plugins on third tab which wil
 Click Apply and Debug
 
 * You should see the log in the console appeared after the build and non HTTP 404 status on page
-```http://localhost:8080/rest/metrics/prometheus```
+```
+http://localhost:8080/rest/metrics/prometheus
+```
 
 ### Production development with Maven
-* Clean artifacts on root of project
+* Clean artifacts on root of project and create a repository for .target project
 ```
 mvn clean
-```
-* Create a repository for .target project
-```
 cd com.kuguhome.openhab.prometheusmetrics.p2site
 mvn p2:site
 ```
+
 * Run packaging
 ```
 cd ../com.kuguhome.openhab.prometheusmetrics
 mvn package
 ```
+
 * Copy prometheus bundles and com.kuguhome.openhab.prometheusmetrics bundle into ```addon``` folder and start openHAB runtime
 ```
 cp com.kuguhome.openhab.prometseusmetrics.target/bundles/simpleclient-0.4.0.jar ~/dev/openhab-2.3.0/addons/
@@ -54,6 +61,7 @@ cp com.kuguhome.openhab.prometseusmetrics/target/com.kuguhome.openhab.prometheus
 cd ~/dev/openhab-2.3.0/
 ./start_debug.sh
 ```
+
 * Also will be useful to remove cache of the runtime:
 ```
 cd ~/dev/openhab-2.3.0/userdata/
@@ -61,11 +69,21 @@ rm -rf !(etc)
 ```
 
 * You should see the log in the console appeared after and non HTTP 404 status on page
-```http://localhost:8080/rest/metrics/prometheus```
+```
+http://localhost:8080/rest/metrics/prometheus
+```
 
 Several files which you should consider:
-```startup.properties``` - for loading bundles at startup from maven repo
-```org.ops4j.pax.logging.cfg``` for logging properties
+```
+startup.properties
+```
+
+- for loading bundles at startup from maven repo
+```
+org.ops4j.pax.logging.cfg
+```
+
+- for logging properties
 
 
 * Add repository created with p2:site goal
@@ -79,6 +97,7 @@ check your MANIFEST file for every artifact in the list and put appropriate vers
 ```
 ch.qos.logback.classic;version="1.0.7",
 ```
+
 * Package sun.misc
 ![sun.misc issue](img/sun_misc_issue.png =500x)
 We created separate bundle fragment to deal with this problem. Check if this fragment added to your Target
