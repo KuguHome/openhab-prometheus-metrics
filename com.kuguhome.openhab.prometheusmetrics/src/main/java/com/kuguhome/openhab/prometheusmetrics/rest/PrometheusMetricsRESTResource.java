@@ -9,6 +9,7 @@
 package com.kuguhome.openhab.prometheusmetrics.rest;
 
 import java.io.StringWriter;
+import java.util.Objects;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -26,14 +27,21 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kuguhome.openhab.prometheusmetrics.api.DefaultMetricManager;
 import com.kuguhome.openhab.prometheusmetrics.api.MetricManager;
 import com.kuguhome.openhab.prometheusmetrics.api.RESTExposable;
+import com.kuguhome.openhab.prometheusmetrics.api.ToDoMetric;
 import com.kuguhome.openhab.prometheusmetrics.exposable.InboxCountMetric;
+import com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABBundleStateMetric;
+import com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABThingStateMetric;
+import com.kuguhome.openhab.prometheusmetrics.exposable.SmarthomeEventCountMetric;
 
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
@@ -75,8 +83,6 @@ public class PrometheusMetricsRESTResource implements RESTResource {
 
     public static final String PATH_HABMETRICS = "metrics";
 
-    private MetricManager metricManager;
-
     protected HttpService httpService;
 
     @GET
@@ -89,15 +95,7 @@ public class PrometheusMetricsRESTResource implements RESTResource {
     public Response getThingsMetricsPrometheus(@Context HttpServletRequest request,
             @Context HttpServletResponse response) throws Exception {
 
-        metricManager.getExposables().forEach(e -> {
-            e.expose();
-        });
-
-        /*
-         * restExposables.forEach(r -> {
-         * r.
-         * });
-         */
+        metricManager.getExposables().parallelStream().filter(Objects::nonNull).forEach(RESTExposable::expose);
 
         final StringWriter writer = new StringWriter();
         TextFormat.write004(writer, CollectorRegistry.defaultRegistry.metricFamilySamples());
@@ -107,17 +105,12 @@ public class PrometheusMetricsRESTResource implements RESTResource {
 
     @Activate
     protected void activate() {
-        metricManager.addExposable(new RESTExposable() {
-
-            @Override
-            public void expose() {
-                // TODO Auto-generated method stub
-
-            }
-
-        });
-
-        metricManager.addExposable(new InboxCountMetric());
+        metricManager.registerMetric(null);
+        metricManager.registerMetric(inboxCountMetric);
+        metricManager.registerMetric(openHABBundleStateMetric);
+        metricManager.registerMetric(openHABThingStateMetric);
+        metricManager.registerMetric(smarthomeEventCountMetric);
+        metricManager.registerMetric(new ToDoMetric());
 
         try {
             httpService.registerResources(METRICS_ALIAS, "web", null);
@@ -140,6 +133,58 @@ public class PrometheusMetricsRESTResource implements RESTResource {
 
     protected void unsetHttpService(HttpService httpService) {
         this.httpService = null;
+    }
+
+    protected MetricManager metricManager;
+
+    protected RESTExposable inboxCountMetric;
+    protected RESTExposable openHABBundleStateMetric;
+    protected RESTExposable openHABThingStateMetric;
+    protected RESTExposable smarthomeEventCountMetric;
+
+    public void unsetMetricManager() {
+        this.metricManager = null;
+    }
+
+    @Reference
+    public void setMetricManager(DefaultMetricManager metricManager) {
+        this.metricManager = metricManager;
+    }
+
+    public void unsetInboxCountMetric() {
+        this.inboxCountMetric = null;
+    }
+
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "InboxCountMetric", policy = ReferencePolicy.DYNAMIC)
+    public void setInboxCountMetric(InboxCountMetric inboxCountMetric) {
+        this.inboxCountMetric = inboxCountMetric;
+    }
+
+    public void unsetOpenHABBundleStateMetric() {
+        this.openHABBundleStateMetric = null;
+    }
+
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "OpenHABBundleStateMetric", policy = ReferencePolicy.DYNAMIC)
+    public void setOpenHABBundleStateMetric(OpenHABBundleStateMetric openHABBundleStateMetric) {
+        this.openHABBundleStateMetric = openHABBundleStateMetric;
+    }
+
+    public void unsetOpenHABThingStateMetric() {
+        this.openHABThingStateMetric = null;
+    }
+
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "OpenHABThingStateMetric", policy = ReferencePolicy.DYNAMIC)
+    public void setOpenHABThingStateMetric(OpenHABThingStateMetric openHABThingStateMetric) {
+        this.openHABThingStateMetric = openHABThingStateMetric;
+    }
+
+    public void unsetSmarthomeEventCountMetric() {
+        this.smarthomeEventCountMetric = null;
+    }
+
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "SmarthomeEventCountMetric", policy = ReferencePolicy.DYNAMIC)
+    public void setSmarthomeEventCountMetric(SmarthomeEventCountMetric smarthomeEventCountMetric) {
+        this.smarthomeEventCountMetric = smarthomeEventCountMetric;
     }
 
 }

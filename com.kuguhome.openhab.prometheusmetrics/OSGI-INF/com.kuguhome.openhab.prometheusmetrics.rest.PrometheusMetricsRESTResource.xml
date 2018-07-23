@@ -5,5 +5,10 @@
       <provide interface="com.kuguhome.openhab.prometheusmetrics.rest.PrometheusMetricsRESTResource"/>
    </service>
    <reference bind="setHttpService" interface="org.osgi.service.http.HttpService" name="HttpService" unbind="unsetHttpService"/>
+   <reference bind="setInboxCountMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.exposable.InboxCountMetric" name="InboxCountMetric" policy="dynamic"/>
+   <reference bind="setMetricManager" interface="com.kuguhome.openhab.prometheusmetrics.api.DefaultMetricManager" name="MetricManager"/>
+   <reference bind="setOpenHABBundleStateMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABBundleStateMetric" name="OpenHABBundleStateMetric" policy="dynamic"/>
+   <reference bind="setOpenHABThingStateMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABThingStateMetric" name="OpenHABThingStateMetric" policy="dynamic"/>
+   <reference bind="setSmarthomeEventCountMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.exposable.SmarthomeEventCountMetric" name="SmarthomeEventCountMetric" policy="dynamic"/>
    <implementation class="com.kuguhome.openhab.prometheusmetrics.rest.PrometheusMetricsRESTResource"/>
 </scr:component>

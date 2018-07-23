@@ -18,12 +18,20 @@ import com.kuguhome.openhab.prometheusmetrics.api.RESTExposable;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Gauge.Child;
 
-@Component(service = { RESTExposable.class })
+/**
+ * This class describes the Inbox Count Metric
+ *
+ * @author Roman Malyugin
+ *
+ */
+
+@Component(service = { InboxCountMetric.class, RESTExposable.class })
 public class InboxCountMetric implements RESTExposable {
 
     private final Logger logger = LoggerFactory.getLogger(InboxCountMetric.class);
 
-    private Inbox inbox;
+    protected Inbox inbox;
+
     private final static Gauge openhabInboxCount = Gauge.build("openhab_inbox_count", "openHAB inbox count")
             .register(restRegistry);
 
@@ -38,7 +46,7 @@ public class InboxCountMetric implements RESTExposable {
 
     }
 
-    @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
     protected void setInbox(Inbox inbox) {
         this.inbox = inbox;
     }

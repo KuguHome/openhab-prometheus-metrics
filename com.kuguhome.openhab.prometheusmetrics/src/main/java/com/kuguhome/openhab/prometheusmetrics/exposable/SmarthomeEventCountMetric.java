@@ -25,7 +25,15 @@ import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Gauge.Child;
 
-@Component(service = { RESTExposable.class, EventSubscriber.class })
+/**
+ * This class describes the Smarthome Event Count Metric
+ * Events only of smarthome topic
+ *
+ * @author Roman Malyugin
+ *
+ */
+
+@Component(service = { SmarthomeEventCountMetric.class, RESTExposable.class, EventSubscriber.class })
 public class SmarthomeEventCountMetric implements RESTExposable, EventSubscriber {
 
     private final Logger logger = LoggerFactory.getLogger(SmarthomeEventCountMetric.class);

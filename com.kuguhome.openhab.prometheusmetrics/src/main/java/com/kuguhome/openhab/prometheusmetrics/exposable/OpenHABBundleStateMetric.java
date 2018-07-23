@@ -17,7 +17,14 @@ import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Gauge.Child;
 
-@Component(service = { RESTExposable.class })
+/**
+ * This class describes the OSGi Bundle State Metric
+ *
+ * @author Roman Malyugin
+ *
+ */
+
+@Component(service = { OpenHABBundleStateMetric.class, RESTExposable.class })
 public class OpenHABBundleStateMetric implements RESTExposable {
 
     private final Logger logger = LoggerFactory.getLogger(OpenHABBundleStateMetric.class);

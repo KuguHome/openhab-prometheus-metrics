@@ -5,6 +5,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,12 +16,19 @@ import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Gauge.Child;
 
-@Component(service = { RESTExposable.class })
+/**
+ * This class describes the OpenHAB Thing State Metric
+ *
+ * @author Roman Malyugin
+ *
+ */
+
+@Component(service = { OpenHABThingStateMetric.class, RESTExposable.class })
 public class OpenHABThingStateMetric implements RESTExposable {
 
     private final Logger logger = LoggerFactory.getLogger(OpenHABThingStateMetric.class);
 
-    private ThingRegistry thingRegistry;
+    protected ThingRegistry thingRegistry;
 
     private final static Gauge openhabThingState = Gauge.build("openhab_thing_state", "openHAB Things state")
             .labelNames("thing").register(CollectorRegistry.defaultRegistry);
@@ -33,7 +42,7 @@ public class OpenHABThingStateMetric implements RESTExposable {
         });
     }
 
-    @Reference
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
     protected void setThingRegistry(ThingRegistry thingRegistry) {
         this.thingRegistry = thingRegistry;
     }
