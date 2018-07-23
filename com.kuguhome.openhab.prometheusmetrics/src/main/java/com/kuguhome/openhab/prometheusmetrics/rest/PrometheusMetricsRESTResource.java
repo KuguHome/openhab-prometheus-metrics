@@ -49,6 +49,7 @@ import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.exporter.common.TextFormat;
+import io.prometheus.client.hotspot.DefaultExports;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -113,6 +114,9 @@ public class PrometheusMetricsRESTResource implements RESTResource {
 
     @Activate
     protected void activate() {
+
+        DefaultExports.initialize();
+
         metricManager.registerMetric(null);
         metricManager.registerMetric(inboxCountMetric);
         metricManager.registerMetric(openHABBundleStateMetric);

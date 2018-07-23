@@ -25,6 +25,7 @@ public class SimpleMetric implements MetricSettable {
 
     @Override
     public void expose() {
+        // simpleMetricGauge.set(metricValue); TODO: fix this
         this.labelsValues.forEach((l, v) -> {
             Child child = new Child();
             child.set(v);
@@ -43,14 +44,12 @@ public class SimpleMetric implements MetricSettable {
     }
 
     @Override
-    public void set(String metricName, double metrciValue, Map<String, Double> labelsValues) {
+    public void set(String metricName, double metricValue, Map<String, Double> labelsValues) {
         this.metricName = metricName;
-        this.metricValue = metrciValue;
+        this.metricValue = metricValue;
         this.labelsValues = labelsValues;
         if (simpleMetricGauge == null) {
-            simpleMetricGauge = Gauge.build(metricName, metricName)
-                    .labelNames(this.labelsValues.keySet().toArray(new String[this.labelsValues.size()]))
-                    .register(restRegistry);
+            simpleMetricGauge = Gauge.build(metricName, metricName).labelNames(metricName).register(restRegistry);
         }
     }
 
