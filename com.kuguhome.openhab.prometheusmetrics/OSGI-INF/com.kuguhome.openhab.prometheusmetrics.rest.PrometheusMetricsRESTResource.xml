@@ -10,6 +10,7 @@
    <reference bind="setOpenHABBundleStateMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABBundleStateMetric" name="OpenHABBundleStateMetric" policy="dynamic"/>
    <reference bind="setOpenHABThingStateMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABThingStateMetric" name="OpenHABThingStateMetric" policy="dynamic"/>
    <reference bind="setSimpleMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.api.MetricSettable" name="SimpleMetric" policy="dynamic"/>
-   <reference bind="setSmarthomeEventCountMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.exposable.SmarthomeEventCountMetric" name="SmarthomeEventCountMetric" policy="dynamic"/>
+   <reference bind="setSmarthomeEventCountMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.api.RESTExposable" name="SmarthomeEventCountMetric" policy="dynamic"/>
+   <reference bind="setThreadPoolMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.api.RESTExposable" name="ThreadPoolMetric" policy="dynamic"/>
    <implementation class="com.kuguhome.openhab.prometheusmetrics.rest.PrometheusMetricsRESTResource"/>
 </scr:component>

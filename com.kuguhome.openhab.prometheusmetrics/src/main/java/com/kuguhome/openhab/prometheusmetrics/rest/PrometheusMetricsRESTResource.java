@@ -41,15 +41,14 @@ import com.kuguhome.openhab.prometheusmetrics.api.MetricSettable;
 import com.kuguhome.openhab.prometheusmetrics.api.RESTExposable;
 import com.kuguhome.openhab.prometheusmetrics.api.ToDoMetric;
 import com.kuguhome.openhab.prometheusmetrics.exposable.InboxCountMetric;
+import com.kuguhome.openhab.prometheusmetrics.exposable.JVMMetric;
 import com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABBundleStateMetric;
 import com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABThingStateMetric;
-import com.kuguhome.openhab.prometheusmetrics.exposable.SmarthomeEventCountMetric;
 
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.exporter.common.TextFormat;
-import io.prometheus.client.hotspot.DefaultExports;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -115,7 +114,7 @@ public class PrometheusMetricsRESTResource implements RESTResource {
     @Activate
     protected void activate() {
 
-        DefaultExports.initialize();
+        JVMMetric.initialize();
 
         metricManager.registerMetric(null);
         metricManager.registerMetric(inboxCountMetric);
@@ -123,6 +122,7 @@ public class PrometheusMetricsRESTResource implements RESTResource {
         metricManager.registerMetric(openHABThingStateMetric);
         metricManager.registerMetric(smarthomeEventCountMetric);
         metricManager.registerMetric(simpleMetric);
+        metricManager.registerMetric(threadPoolMetric);
         metricManager.registerMetric(new ToDoMetric());
 
         try {
@@ -154,6 +154,7 @@ public class PrometheusMetricsRESTResource implements RESTResource {
     protected RESTExposable openHABBundleStateMetric;
     protected RESTExposable openHABThingStateMetric;
     protected RESTExposable smarthomeEventCountMetric;
+    protected RESTExposable threadPoolMetric;
     protected MetricSettable simpleMetric;
 
     public void unsetMetricManager() {
@@ -197,7 +198,7 @@ public class PrometheusMetricsRESTResource implements RESTResource {
     }
 
     @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "SmarthomeEventCountMetric", policy = ReferencePolicy.DYNAMIC)
-    public void setSmarthomeEventCountMetric(SmarthomeEventCountMetric smarthomeEventCountMetric) {
+    public void setSmarthomeEventCountMetric(RESTExposable smarthomeEventCountMetric) {
         this.smarthomeEventCountMetric = smarthomeEventCountMetric;
     }
 
@@ -208,6 +209,15 @@ public class PrometheusMetricsRESTResource implements RESTResource {
     @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "SimpleMetric", policy = ReferencePolicy.DYNAMIC)
     public void setSimpleMetric(MetricSettable simpleMetric) {
         this.simpleMetric = simpleMetric;
+    }
+
+    public void unsetThreadPoolMetric() {
+        this.threadPoolMetric = null;
+    }
+
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "ThreadPoolMetric", policy = ReferencePolicy.DYNAMIC)
+    public void setThreadPoolMetric(RESTExposable threadPoolMetric) {
+        this.threadPoolMetric = threadPoolMetric;
     }
 
 }
