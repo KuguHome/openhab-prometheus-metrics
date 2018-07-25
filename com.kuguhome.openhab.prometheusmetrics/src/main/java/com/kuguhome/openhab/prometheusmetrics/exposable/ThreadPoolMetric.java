@@ -1,6 +1,7 @@
 package com.kuguhome.openhab.prometheusmetrics.exposable;
 
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -29,22 +30,37 @@ public class ThreadPoolMetric implements RESTExposable {
 
     private final Logger logger = LoggerFactory.getLogger(ThreadPoolMetric.class);
 
-    private final static Gauge openhabThreadPoolCount = Gauge
-            .build("openhab_active_threads_count", "openHAB threadpools counter").labelNames("pool")
-            .register(restRegistry);
+    private final static Gauge openhabActiveThreadsCount = Gauge
+            .build("openhab_pool_threads_count_active",
+                    "approximate number of threads that are actively executing tasks")
+            .labelNames("pool").register(restRegistry);
     private final static Gauge openhabThreadPoolSize = Gauge
-            .build("openhab_thread_pool_size", "openHAB threadpools size").labelNames("pool").register(restRegistry);
-    private final static Gauge openhabMaximunThreadPoolSize = Gauge
-            .build("openhab_maximun_thread_pool_size", "openHAB Maximun threadpools size").labelNames("pool")
+            .build("openhab_pool_threads_count_current", "current number of threads in the pool").labelNames("pool")
             .register(restRegistry);
-    private final static Gauge openhabThreadPoolCompletedTastCount = Gauge
-            .build("openhab_completed_task_count", "openHAB threadpools completed task counter").labelNames("pool")
-            .register(restRegistry);
-    private final static Gauge openhabThreadPoolTastCount = Gauge
-            .build("openhab_task_count", "openHAB threadpools task counter").labelNames("pool").register(restRegistry);
+    private final static Gauge openhabThreadPoolCompletedTaskCount = Gauge
+            .build("openhab_pool_tasks_count_completed",
+                    "approximate total number of tasks that have completed execution")
+            .labelNames("pool").register(restRegistry);
     private final static Gauge openhabLargestThreadPoolSize = Gauge
-            .build("openhab_largest_thread_pool_size", "openHAB largest threadpools size").labelNames("pool")
+            .build("openhab_pool_threads_count_largest",
+                    "largest number of threads that have ever simultaneously been in the pool")
+            .labelNames("pool").register(restRegistry);
+    private final static Gauge openhabMaximunThreadPoolSize = Gauge
+            .build("openhab_pool_size_max", "maximum allowed number of threads in the pool").labelNames("pool")
             .register(restRegistry);
+    private final static Gauge openhabThreadPoolTaskCount = Gauge
+            .build("openhab_pool_tasks_count_total",
+                    "total number of tasks that have ever been scheduled for execution")
+            .labelNames("pool").register(restRegistry);
+    private final static Gauge openhabCorePoolSize = Gauge
+            .build("openhab_pool_size", "regular number of threads in the pool").labelNames("pool")
+            .register(restRegistry);
+    private final static Gauge openhabThreadPoolQueueSize = Gauge
+            .build("openhab_pool_queue_count", "the number of tasks waiting to get executed by a thread")
+            .labelNames("pool").register(restRegistry);
+    private final static Gauge openhabKeepAliveTime = Gauge.build("openhab_pool_keepalive_time_seconds",
+            "the amount of time that threads in excess of the regular pool size may remain idle before being terminated")
+            .labelNames("pool").register(restRegistry);
 
     protected KuguThreadPoolManager threadPoolManager;
 
@@ -56,7 +72,7 @@ public class ThreadPoolMetric implements RESTExposable {
                 {
                     Child child = new Child();
                     child.set(tpe.getActiveCount());
-                    openhabThreadPoolCount.setChild(child, n);
+                    openhabActiveThreadsCount.setChild(child, n);
                 }
                 {
                     Child child = new Child();
@@ -66,7 +82,7 @@ public class ThreadPoolMetric implements RESTExposable {
                 {
                     Child child = new Child();
                     child.set(tpe.getCompletedTaskCount());
-                    openhabThreadPoolCompletedTastCount.setChild(child, n);
+                    openhabThreadPoolCompletedTaskCount.setChild(child, n);
                 }
                 {
                     Child child = new Child();
@@ -76,12 +92,27 @@ public class ThreadPoolMetric implements RESTExposable {
                 {
                     Child child = new Child();
                     child.set(tpe.getTaskCount());
-                    openhabThreadPoolTastCount.setChild(child, n);
+                    openhabThreadPoolTaskCount.setChild(child, n);
                 }
                 {
                     Child child = new Child();
                     child.set(tpe.getMaximumPoolSize());
                     openhabMaximunThreadPoolSize.setChild(child, n);
+                }
+                {
+                    Child child = new Child();
+                    child.set(tpe.getCorePoolSize());
+                    openhabCorePoolSize.setChild(child, n);
+                }
+                {
+                    Child child = new Child();
+                    child.set(tpe.getQueue().size());
+                    openhabThreadPoolQueueSize.setChild(child, n);
+                }
+                {
+                    Child child = new Child();
+                    child.set(tpe.getKeepAliveTime(TimeUnit.SECONDS));
+                    openhabKeepAliveTime.setChild(child, n);
                 }
             }
         });
