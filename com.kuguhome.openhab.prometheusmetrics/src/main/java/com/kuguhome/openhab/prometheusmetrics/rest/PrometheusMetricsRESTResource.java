@@ -35,11 +35,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kuguhome.openhab.prometheusmetrics.api.DefaultMetricManager;
-import com.kuguhome.openhab.prometheusmetrics.api.MetricManager;
 import com.kuguhome.openhab.prometheusmetrics.api.RESTExposable;
 import com.kuguhome.openhab.prometheusmetrics.exposable.InboxCountMetric;
 import com.kuguhome.openhab.prometheusmetrics.exposable.JVMMetric;
+import com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABBundleStateMetric;
 import com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABThingStateMetric;
+import com.kuguhome.openhab.prometheusmetrics.exposable.SmarthomeEventCountMetric;
+import com.kuguhome.openhab.prometheusmetrics.exposable.ThreadPoolMetric;
 
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.exporter.common.TextFormat;
@@ -61,25 +63,10 @@ public class PrometheusMetricsRESTResource implements RESTResource {
 
     private final Logger logger = LoggerFactory.getLogger(PrometheusMetricsRESTResource.class);
 
-    public static final String METRICS_ALIAS = "/metrics";
-    /*
-     * public static final String COUNTER_NAME = "logback_appender_total";
-     *
-     * private final static Counter logCounter = Counter
-     * .build("openhab_logmessages_total", "Logback log statements at various log levels").labelNames("level")
-     * .register(CollectorRegistry.defaultRegistry);
-     * private final static Gauge logErrorCounter = Gauge
-     * .build("openhab_logmessages_error", "Logback log statements at various log levels").labelNames("type")
-     * .register(CollectorRegistry.defaultRegistry);
-     *
-     * public static final Counter.Child TRACE_LABEL = logCounter.labels("trace");
-     * public static final Counter.Child DEBUG_LABEL = logCounter.labels("debug");
-     * public static final Counter.Child INFO_LABEL = logCounter.labels("info");
-     * public static final Counter.Child WARN_LABEL = logCounter.labels("warn");
-     * public static final Counter.Child ERROR_LABEL = logCounter.labels("error");
-     */
     public static final String PATH_HABMETRICS = "metrics";
+    public static final String METRICS_ALIAS = "/" + PATH_HABMETRICS;
 
+    @Reference
     protected HttpService httpService;
 
     @GET
@@ -91,13 +78,7 @@ public class PrometheusMetricsRESTResource implements RESTResource {
             @ApiResponse(code = 404, message = "Unknown page") })
     public Response getThingsMetricsPrometheus(@Context HttpServletRequest request,
             @Context HttpServletResponse response) throws Exception {
-        /*
-         * simpleMetric.set("simple_metric", 0, new HashMap<String, Double>() {
-         * {
-         * put("test_label", Math.random());
-         * }
-         * });
-         */
+
         metricManager.getExposables().parallelStream().filter(Objects::nonNull).forEach(RESTExposable::expose);
 
         final StringWriter writer = new StringWriter();
@@ -111,14 +92,11 @@ public class PrometheusMetricsRESTResource implements RESTResource {
 
         JVMMetric.initialize();
 
-        // metricManager.registerMetric(openHABBundleStateMetric);
-        // metricManager.registerMetric(threadPoolMetric);
+        metricManager.registerMetric(openHABBundleStateMetric);
+        metricManager.registerMetric(threadPoolMetric);
         metricManager.registerMetric(smarthomeEventCountMetric);
         metricManager.registerMetric(openHABThingStateMetric);
         metricManager.registerMetric(inboxCountMetric);
-        // metricManager.registerMetric(null);
-        // metricManager.registerMetric(simpleMetric);
-        // metricManager.registerMetric(new ToDoMetric());
 
         try {
             httpService.registerResources(METRICS_ALIAS, "web", null);
@@ -135,88 +113,21 @@ public class PrometheusMetricsRESTResource implements RESTResource {
     }
 
     @Reference
-    protected void setHttpService(HttpService httpService) {
-        this.httpService = httpService;
-    }
+    protected DefaultMetricManager metricManager;
 
-    protected void unsetHttpService(HttpService httpService) {
-        this.httpService = null;
-    }
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+    volatile protected InboxCountMetric inboxCountMetric;
 
-    protected MetricManager metricManager;
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+    volatile protected OpenHABBundleStateMetric openHABBundleStateMetric;
 
-    protected RESTExposable inboxCountMetric;
-    // protected RESTExposable openHABBundleStateMetric;
-    protected RESTExposable openHABThingStateMetric;
-    protected RESTExposable smarthomeEventCountMetric;
-    // protected RESTExposable threadPoolMetric;
-    // protected MetricSettable simpleMetric;
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+    volatile protected OpenHABThingStateMetric openHABThingStateMetric;
 
-    public void unsetMetricManager() {
-        this.metricManager = null;
-    }
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+    volatile protected SmarthomeEventCountMetric smarthomeEventCountMetric;
 
-    @Reference
-    public void setMetricManager(DefaultMetricManager metricManager) {
-        this.metricManager = metricManager;
-    }
+    @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
+    volatile protected ThreadPoolMetric threadPoolMetric;
 
-    public void unsetInboxCountMetric() {
-        this.inboxCountMetric = null;
-    }
-
-    @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "InboxCountMetric", policy = ReferencePolicy.DYNAMIC)
-    public void setInboxCountMetric(InboxCountMetric inboxCountMetric) {
-        this.inboxCountMetric = inboxCountMetric;
-    }
-
-    /*
-     * public void unsetOpenHABBundleStateMetric() {
-     * this.openHABBundleStateMetric = null;
-     * }
-     * 
-     * @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "OpenHABBundleStateMetric", policy =
-     * ReferencePolicy.DYNAMIC)
-     * public void setOpenHABBundleStateMetric(OpenHABBundleStateMetric openHABBundleStateMetric) {
-     * this.openHABBundleStateMetric = openHABBundleStateMetric;
-     * }
-     */
-    public void unsetOpenHABThingStateMetric() {
-        this.openHABThingStateMetric = null;
-    }
-
-    @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "OpenHABThingStateMetric", policy = ReferencePolicy.DYNAMIC)
-    public void setOpenHABThingStateMetric(OpenHABThingStateMetric openHABThingStateMetric) {
-        this.openHABThingStateMetric = openHABThingStateMetric;
-    }
-
-    public void unsetSmarthomeEventCountMetric() {
-        this.smarthomeEventCountMetric = null;
-    }
-
-    @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "SmarthomeEventCountMetric", policy = ReferencePolicy.DYNAMIC)
-    public void setSmarthomeEventCountMetric(RESTExposable smarthomeEventCountMetric) {
-        this.smarthomeEventCountMetric = smarthomeEventCountMetric;
-    }
-    /*
-     * public void unsetSimpleMetric() {
-     * this.simpleMetric = null;
-     * }
-     *
-     * @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "SimpleMetric", policy = ReferencePolicy.DYNAMIC)
-     * public void setSimpleMetric(MetricSettable simpleMetric) {
-     * this.simpleMetric = simpleMetric;
-     * }
-     */
-    /*
-     * public void unsetThreadPoolMetric() {
-     * this.threadPoolMetric = null;
-     * }
-     *
-     * @Reference(cardinality = ReferenceCardinality.MANDATORY, name = "ThreadPoolMetric", policy =
-     * ReferencePolicy.DYNAMIC)
-     * public void setThreadPoolMetric(RESTExposable threadPoolMetric) {
-     * this.threadPoolMetric = threadPoolMetric;
-     * }
-     */
 }

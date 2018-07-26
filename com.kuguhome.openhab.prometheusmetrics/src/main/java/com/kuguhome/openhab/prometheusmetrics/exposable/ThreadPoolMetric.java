@@ -8,7 +8,6 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +61,7 @@ public class ThreadPoolMetric implements RESTExposable {
             "the amount of time that threads in excess of the regular pool size may remain idle before being terminated")
             .labelNames("pool").register(restRegistry);
 
+    @Reference(cardinality = ReferenceCardinality.MANDATORY)
     protected KuguThreadPoolManager threadPoolManager;
 
     @Override
@@ -126,15 +126,6 @@ public class ThreadPoolMetric implements RESTExposable {
     @Deactivate
     protected void deactivate() {
         logger.info(ThreadPoolMetric.class.getName() + " deactivated.");
-    }
-
-    public void unsetThreadPoolManager() {
-        this.threadPoolManager = null;
-    }
-
-    @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
-    public void setThreadPoolManager(KuguThreadPoolManager threadPoolManager) {
-        this.threadPoolManager = threadPoolManager;
     }
 
 }

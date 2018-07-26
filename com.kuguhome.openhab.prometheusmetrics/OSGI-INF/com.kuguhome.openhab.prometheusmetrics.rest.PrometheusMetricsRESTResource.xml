@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="com.kuguhome.openhab.prometheusmetrics.rest.PrometheusMetricsRESTResource">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="activate" deactivate="deactivate" name="com.kuguhome.openhab.prometheusmetrics.rest.PrometheusMetricsRESTResource">
    <service>
       <provide interface="org.eclipse.smarthome.io.rest.RESTResource"/>
       <provide interface="com.kuguhome.openhab.prometheusmetrics.rest.PrometheusMetricsRESTResource"/>
    </service>
-   <reference bind="setHttpService" interface="org.osgi.service.http.HttpService" name="HttpService" unbind="unsetHttpService"/>
-   <reference bind="setInboxCountMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.exposable.InboxCountMetric" name="InboxCountMetric" policy="dynamic"/>
-   <reference bind="setMetricManager" interface="com.kuguhome.openhab.prometheusmetrics.api.DefaultMetricManager" name="MetricManager"/>
-   <reference bind="setOpenHABThingStateMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABThingStateMetric" name="OpenHABThingStateMetric" policy="dynamic"/>
-   <reference bind="setSmarthomeEventCountMetric" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.api.RESTExposable" name="SmarthomeEventCountMetric" policy="dynamic"/>
+   <reference cardinality="1..1" field="httpService" interface="org.osgi.service.http.HttpService" name="httpService"/>
+   <reference cardinality="1..1" field="inboxCountMetric" interface="com.kuguhome.openhab.prometheusmetrics.exposable.InboxCountMetric" name="inboxCountMetric" policy="dynamic"/>
+   <reference cardinality="1..1" field="metricManager" interface="com.kuguhome.openhab.prometheusmetrics.api.DefaultMetricManager" name="metricManager"/>
+   <reference cardinality="1..1" field="openHABBundleStateMetric" interface="com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABBundleStateMetric" name="openHABBundleStateMetric" policy="dynamic"/>
+   <reference cardinality="1..1" field="openHABThingStateMetric" interface="com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABThingStateMetric" name="openHABThingStateMetric" policy="dynamic"/>
+   <reference cardinality="1..1" field="smarthomeEventCountMetric" interface="com.kuguhome.openhab.prometheusmetrics.exposable.SmarthomeEventCountMetric" name="smarthomeEventCountMetric" policy="dynamic"/>
+   <reference cardinality="1..1" field="threadPoolMetric" interface="com.kuguhome.openhab.prometheusmetrics.exposable.ThreadPoolMetric" name="threadPoolMetric" policy="dynamic"/>
    <implementation class="com.kuguhome.openhab.prometheusmetrics.rest.PrometheusMetricsRESTResource"/>
 </scr:component>
