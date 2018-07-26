@@ -23,6 +23,8 @@ import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
+import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
@@ -35,6 +37,8 @@ import org.slf4j.LoggerFactory;
  * @author Roman Malyugin - Initial contribution
  */
 @NonNullByDefault
+@Component(configurationPid = "binding.openhabprometheusmetrics", service = { EventHandler.class,
+        ThingHandlerFactory.class })
 public class PrometheusMetricsHandlerFactory extends BaseThingHandlerFactory implements EventHandler {
 
     private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_SAMPLE);
