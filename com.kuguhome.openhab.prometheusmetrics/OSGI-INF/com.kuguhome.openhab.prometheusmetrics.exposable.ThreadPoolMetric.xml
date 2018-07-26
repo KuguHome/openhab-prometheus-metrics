@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="com.kuguhome.openhab.prometheusmetrics.exposable.ThreadPoolMetric">
-   <service>
-      <provide interface="com.kuguhome.openhab.prometheusmetrics.exposable.ThreadPoolMetric"/>
-      <provide interface="com.kuguhome.openhab.prometheusmetrics.api.RESTExposable"/>
-   </service>
-   <reference bind="setThreadPoolManager" cardinality="1..1" interface="com.kuguhome.openhab.prometheusmetrics.internal.KuguThreadPoolManager" name="ThreadPoolManager" policy="dynamic"/>
-   <implementation class="com.kuguhome.openhab.prometheusmetrics.exposable.ThreadPoolMetric"/>
-</scr:component>
