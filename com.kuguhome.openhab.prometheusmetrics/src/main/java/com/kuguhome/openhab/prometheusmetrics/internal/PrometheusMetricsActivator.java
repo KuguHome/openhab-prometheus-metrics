@@ -8,10 +8,11 @@
  */
 package com.kuguhome.openhab.prometheusmetrics.internal;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The {@link PrometheusMetricsActivator}
@@ -21,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public final class PrometheusMetricsActivator implements BundleActivator {
 
-    private static Logger logger = LoggerFactory.getLogger(PrometheusMetricsActivator.class);
+    private static final Logger logger = LogManager.getLogger(PrometheusMetricsActivator.class);
 
     private static BundleContext context;
 
@@ -32,6 +33,8 @@ public final class PrometheusMetricsActivator implements BundleActivator {
     public void start(BundleContext bc) throws Exception {
         context = bc;
         logger.debug("PrometheusMetrics action has been started.");
+
+        LoggerContext lc = (LoggerContext) LogManager.getContext(false);
     }
 
     /**

@@ -21,6 +21,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
 import org.eclipse.smarthome.core.auth.Role;
 import org.eclipse.smarthome.io.rest.RESTResource;
 import org.osgi.service.component.annotations.Activate;
@@ -31,8 +32,8 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.kuguhome.openhab.prometheusmetrics.api.DefaultMetricManager;
 import com.kuguhome.openhab.prometheusmetrics.api.RESTExposable;
@@ -42,6 +43,7 @@ import com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABBundleStateMetric
 import com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABThingStateMetric;
 import com.kuguhome.openhab.prometheusmetrics.exposable.SmarthomeEventCountMetric;
 import com.kuguhome.openhab.prometheusmetrics.exposable.ThreadPoolMetric;
+import com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsActivator;
 
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.exporter.common.TextFormat;
@@ -61,7 +63,7 @@ import io.swagger.annotations.ApiResponses;
 @Component(service = { RESTResource.class, PrometheusMetricsRESTResource.class })
 public class PrometheusMetricsRESTResource implements RESTResource {
 
-    private final Logger logger = LoggerFactory.getLogger(PrometheusMetricsRESTResource.class);
+    private static final Logger logger = LogManager.getLogger(PrometheusMetricsActivator.class);
 
     public static final String PATH_HABMETRICS = "metrics";
     public static final String METRICS_ALIAS = "/" + PATH_HABMETRICS;

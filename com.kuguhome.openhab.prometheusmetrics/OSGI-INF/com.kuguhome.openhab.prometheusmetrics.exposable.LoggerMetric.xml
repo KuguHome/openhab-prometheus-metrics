@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="com.kuguhome.openhab.prometheusmetrics.exposable.LoggerMetric">
+   <service>
+      <provide interface="com.kuguhome.openhab.prometheusmetrics.exposable.LoggerMetric"/>
+      <provide interface="com.kuguhome.openhab.prometheusmetrics.api.RESTExposable"/>
+   </service>
+   <implementation class="com.kuguhome.openhab.prometheusmetrics.exposable.LoggerMetric"/>
+</scr:component>

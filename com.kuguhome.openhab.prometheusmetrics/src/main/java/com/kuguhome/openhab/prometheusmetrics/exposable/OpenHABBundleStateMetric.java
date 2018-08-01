@@ -2,15 +2,16 @@ package com.kuguhome.openhab.prometheusmetrics.exposable;
 
 import java.util.stream.Stream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.kuguhome.openhab.prometheusmetrics.api.RESTExposable;
+import com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsActivator;
 import com.kuguhome.openhab.prometheusmetrics.rest.PrometheusMetricsRESTResource;
 
 import io.prometheus.client.CollectorRegistry;
@@ -27,7 +28,7 @@ import io.prometheus.client.Gauge.Child;
 @Component(service = { OpenHABBundleStateMetric.class, RESTExposable.class })
 public class OpenHABBundleStateMetric implements RESTExposable {
 
-    private final Logger logger = LoggerFactory.getLogger(OpenHABBundleStateMetric.class);
+    private static final Logger logger = LogManager.getLogger(PrometheusMetricsActivator.class);
 
     private final static Gauge openhabBundleState = Gauge.build("openhab_bundle_state", "openHAB OSGi bundles state")
             .labelNames("bundle").register(CollectorRegistry.defaultRegistry);

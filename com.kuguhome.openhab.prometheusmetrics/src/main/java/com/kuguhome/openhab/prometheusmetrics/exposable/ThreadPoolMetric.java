@@ -3,13 +3,13 @@ package com.kuguhome.openhab.prometheusmetrics.exposable;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.kuguhome.openhab.prometheusmetrics.api.RESTExposable;
 import com.kuguhome.openhab.prometheusmetrics.internal.KuguThreadPoolManager;
@@ -27,7 +27,7 @@ import io.prometheus.client.Gauge.Child;
 @Component(service = { ThreadPoolMetric.class, RESTExposable.class })
 public class ThreadPoolMetric implements RESTExposable {
 
-    private final Logger logger = LoggerFactory.getLogger(ThreadPoolMetric.class);
+    private static final Logger logger = LogManager.getLogger(ThreadPoolMetric.class);
 
     private final static Gauge openhabActiveThreadsCount = Gauge
             .build("openhab_pool_threads_count_active",

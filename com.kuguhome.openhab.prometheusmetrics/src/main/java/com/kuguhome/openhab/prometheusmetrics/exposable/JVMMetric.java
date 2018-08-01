@@ -1,5 +1,10 @@
 package com.kuguhome.openhab.prometheusmetrics.exposable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsActivator;
+
 import io.prometheus.client.hotspot.BufferPoolsExports;
 import io.prometheus.client.hotspot.ClassLoadingExports;
 import io.prometheus.client.hotspot.GarbageCollectorExports;
@@ -9,6 +14,7 @@ import io.prometheus.client.hotspot.ThreadExports;
 import io.prometheus.client.hotspot.VersionInfoExports;
 
 public class JVMMetric {
+    private static final Logger logger = LogManager.getLogger(PrometheusMetricsActivator.class);
 
     static ThreadExports threadExports;
 
