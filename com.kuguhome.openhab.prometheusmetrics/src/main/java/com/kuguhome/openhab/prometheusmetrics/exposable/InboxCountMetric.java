@@ -2,8 +2,6 @@ package com.kuguhome.openhab.prometheusmetrics.exposable;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.eclipse.smarthome.config.discovery.DiscoveryResult;
 import org.eclipse.smarthome.config.discovery.inbox.Inbox;
 import org.osgi.service.component.annotations.Activate;
@@ -12,9 +10,10 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.kuguhome.openhab.prometheusmetrics.api.RESTExposable;
-import com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsActivator;
 
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Gauge.Child;
@@ -29,7 +28,7 @@ import io.prometheus.client.Gauge.Child;
 @Component(service = { InboxCountMetric.class, RESTExposable.class })
 public class InboxCountMetric implements RESTExposable {
 
-    private static final Logger logger = LogManager.getLogger(PrometheusMetricsActivator.class);
+    private final Logger logger = LoggerFactory.getLogger(InboxCountMetric.class);
 
     protected Inbox inbox;
 

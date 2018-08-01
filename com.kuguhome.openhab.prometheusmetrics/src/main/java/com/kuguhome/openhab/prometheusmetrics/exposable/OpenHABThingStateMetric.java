@@ -1,7 +1,5 @@
 package com.kuguhome.openhab.prometheusmetrics.exposable;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.eclipse.smarthome.core.thing.ThingRegistry;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -9,9 +7,10 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.kuguhome.openhab.prometheusmetrics.api.RESTExposable;
-import com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsActivator;
 
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Gauge;
@@ -27,7 +26,7 @@ import io.prometheus.client.Gauge.Child;
 @Component(service = { OpenHABThingStateMetric.class, RESTExposable.class })
 public class OpenHABThingStateMetric implements RESTExposable {
 
-    private static final Logger logger = LogManager.getLogger(PrometheusMetricsActivator.class);
+    private final Logger logger = LoggerFactory.getLogger(OpenHABThingStateMetric.class);
 
     protected ThingRegistry thingRegistry;
 
