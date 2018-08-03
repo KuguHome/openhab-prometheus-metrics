@@ -7,7 +7,6 @@ import java.util.Hashtable;
 
 import org.ops4j.pax.logging.PaxLoggingService;
 import org.ops4j.pax.logging.spi.PaxAppender;
-import org.ops4j.pax.logging.spi.PaxLevel;
 import org.ops4j.pax.logging.spi.PaxLoggingEvent;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -31,21 +30,22 @@ public class KuguAppender implements PaxAppender {
     @Override
     public void doAppend(PaxLoggingEvent event) {
 
-        System.out.println("KuguAppender appender " + event.getMessage());
+        System.out.println("KuguAppender: " + event.getMessage());
 
-        PaxLevel level = event.getLevel();
-        if (TRACE.equals(level)) {
+        if (TRACE.intLevel() == event.getLevel().toInt()) {
             TRACE_LABEL.inc();
-        } else if (DEBUG.equals(level)) {
+        } else if (DEBUG.intLevel() == event.getLevel().toInt()) {
             DEBUG_LABEL.inc();
-        } else if (INFO.equals(level)) {
+        } else if (INFO.intLevel() == event.getLevel().toInt()) {
             INFO_LABEL.inc();
-        } else if (WARN.equals(level)) {
+        } else if (WARN.intLevel() == event.getLevel().toInt()) {
             WARN_LABEL.inc();
-        } else if (ERROR.equals(level)) {
+        } else if (ERROR.intLevel() == event.getLevel().toInt()) {
             ERROR_LABEL.inc();
-        } else if (FATAL.equals(level)) {
+        } else if (FATAL.intLevel() == event.getLevel().toInt()) {
             FATAL_LABEL.inc();
+        } else {
+            System.out.println("Level: " + event.getLevel().toInt());
         }
     }
 
