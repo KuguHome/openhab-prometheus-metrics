@@ -32,20 +32,20 @@ public class KuguAppender implements PaxAppender {
 
         System.out.println("KuguAppender: " + event.getMessage());
 
-        if (TRACE.intLevel() == event.getLevel().toInt()) {
+        if (TRACE.name().equals(event.getLevel().toString())) {
             TRACE_LABEL.inc();
-        } else if (DEBUG.intLevel() == event.getLevel().toInt()) {
+        } else if (DEBUG.name().equals(event.getLevel().toString())) {
             DEBUG_LABEL.inc();
-        } else if (INFO.intLevel() == event.getLevel().toInt()) {
+        } else if (INFO.name().equals(event.getLevel().toString())) {
             INFO_LABEL.inc();
-        } else if (WARN.intLevel() == event.getLevel().toInt()) {
+        } else if (WARN.name().equals(event.getLevel().toString())) {
             WARN_LABEL.inc();
-        } else if (ERROR.intLevel() == event.getLevel().toInt()) {
+        } else if (ERROR.name().equals(event.getLevel().toString())) {
             ERROR_LABEL.inc();
-        } else if (FATAL.intLevel() == event.getLevel().toInt()) {
+        } else if (FATAL.name().equals(event.getLevel().toString())) {
             FATAL_LABEL.inc();
         } else {
-            System.out.println("Level: " + event.getLevel().toInt());
+            System.out.println("Level: " + event.getLevel().toString());
         }
     }
 
