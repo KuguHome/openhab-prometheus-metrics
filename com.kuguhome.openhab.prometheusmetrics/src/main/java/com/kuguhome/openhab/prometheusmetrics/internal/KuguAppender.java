@@ -1,42 +1,74 @@
 package com.kuguhome.openhab.prometheusmetrics.internal;
 
+import static org.apache.logging.log4j.Level.*;
+
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import org.ops4j.pax.logging.PaxLoggingService;
 import org.ops4j.pax.logging.spi.PaxAppender;
+import org.ops4j.pax.logging.spi.PaxLevel;
 import org.ops4j.pax.logging.spi.PaxLoggingEvent;
-import org.osgi.framework.ServiceReference;
-import org.osgi.service.log.LogService;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 
-//@Component(service = { KuguAppender.class, LogService.class, PaxAppender.class })
-public class KuguAppender implements PaxAppender, LogService {
+import io.prometheus.client.Counter;
 
-    @Override
-    public void doAppend(PaxLoggingEvent e) {
+@Component(service = { PaxAppender.class })
+public class KuguAppender implements PaxAppender {
 
-        System.out.println("Event: " + e.getMessage());
-
+    @Activate
+    protected void activate(BundleContext context) {
+        System.out.println("KuguAppender appender activated.");
+        final Dictionary<String, String> properties = new Hashtable<String, String>();
+        properties.put(PaxLoggingService.APPENDER_NAME_PROPERTY, "Kugu");
+        ServiceRegistration m_appenderRegistration = context.registerService(PaxAppender.class.getName(), this,
+                properties);
     }
 
     @Override
-    public void log(int arg0, String arg1) {
-        System.out.println("");
+    public void doAppend(PaxLoggingEvent event) {
 
+        System.out.println("KuguAppender appender " + event.getMessage());
+
+        PaxLevel level = event.getLevel();
+        if (TRACE.equals(level)) {
+            TRACE_LABEL.inc();
+        } else if (DEBUG.equals(level)) {
+            DEBUG_LABEL.inc();
+        } else if (INFO.equals(level)) {
+            INFO_LABEL.inc();
+        } else if (WARN.equals(level)) {
+            WARN_LABEL.inc();
+        } else if (ERROR.equals(level)) {
+            ERROR_LABEL.inc();
+        } else if (FATAL.equals(level)) {
+            FATAL_LABEL.inc();
+        }
     }
 
-    @Override
-    public void log(int arg0, String arg1, Throwable arg2) {
-        System.out.println("");
+    public static final String COUNTER_NAME = "log4j2_appender_total";
 
-    }
+    private static final Counter COUNTER;
+    private static final Counter.Child TRACE_LABEL;
+    private static final Counter.Child DEBUG_LABEL;
+    private static final Counter.Child INFO_LABEL;
+    private static final Counter.Child WARN_LABEL;
+    private static final Counter.Child ERROR_LABEL;
+    private static final Counter.Child FATAL_LABEL;
 
-    @Override
-    public void log(ServiceReference arg0, int arg1, String arg2) {
-        System.out.println("");
+    static {
+        COUNTER = Counter.build().name(COUNTER_NAME).help("Log4j2 log statements at various log levels")
+                .labelNames("level").register();
 
-    }
-
-    @Override
-    public void log(ServiceReference arg0, int arg1, String arg2, Throwable arg3) {
-        System.out.println("");
-
+        TRACE_LABEL = COUNTER.labels("trace");
+        DEBUG_LABEL = COUNTER.labels("debug");
+        INFO_LABEL = COUNTER.labels("info");
+        WARN_LABEL = COUNTER.labels("warn");
+        ERROR_LABEL = COUNTER.labels("error");
+        FATAL_LABEL = COUNTER.labels("fatal");
     }
 
 }
