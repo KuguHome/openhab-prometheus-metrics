@@ -1,5 +1,7 @@
 package com.kuguhome.openhab.prometheusmetrics.internal;
 
+import static org.apache.logging.log4j.Level.*;
+
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -24,26 +26,23 @@ public class KuguAppender implements PaxAppender {
 
     @Override
     public void doAppend(PaxLoggingEvent event) {
-        switch (event.getLevel().toString()) {
-            case "TRACE":
-                TRACE_LABEL.inc();
-                break;
-            case "DEBUG":
-                DEBUG_LABEL.inc();
-                break;
-            case "WARN":
-                WARN_LABEL.inc();
-                break;
-            case "ERROR":
-                ERROR_LABEL.inc();
-                break;
-            case "INFO":
-                INFO_LABEL.inc();
-                break;
-            case "FATAL":
-                FATAL_LABEL.inc();
-                break;
+
+        if (TRACE.name().equals(event.getLevel().toString())) {
+            TRACE_LABEL.inc();
+        } else if (DEBUG.name().equals(event.getLevel().toString())) {
+            DEBUG_LABEL.inc();
+        } else if (INFO.name().equals(event.getLevel().toString())) {
+            INFO_LABEL.inc();
+        } else if (WARN.name().equals(event.getLevel().toString())) {
+            WARN_LABEL.inc();
+        } else if (ERROR.name().equals(event.getLevel().toString())) {
+            ERROR_LABEL.inc();
+        } else if (FATAL.name().equals(event.getLevel().toString())) {
+            FATAL_LABEL.inc();
+        } else {
+            System.out.println("Level: " + event.getLevel().toString());
         }
+
     }
 
     public static final String COUNTER_NAME = "openhab_logmessage_count";
