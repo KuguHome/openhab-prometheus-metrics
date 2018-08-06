@@ -17,7 +17,6 @@ public class KuguAppender implements PaxAppender {
 
     @Activate
     protected void activate(BundleContext context) {
-        System.out.println("KuguAppender appender activated.");
         final Dictionary<String, String> properties = new Hashtable<String, String>();
         properties.put(PaxLoggingService.APPENDER_NAME_PROPERTY, "Kugu");
         context.registerService(PaxAppender.class.getName(), this, properties);
