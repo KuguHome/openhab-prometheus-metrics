@@ -1,7 +1,5 @@
 package com.kuguhome.openhab.prometheusmetrics.internal;
 
-import static org.apache.logging.log4j.Level.*;
-
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -9,7 +7,6 @@ import org.ops4j.pax.logging.PaxLoggingService;
 import org.ops4j.pax.logging.spi.PaxAppender;
 import org.ops4j.pax.logging.spi.PaxLoggingEvent;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
@@ -23,33 +20,34 @@ public class KuguAppender implements PaxAppender {
         System.out.println("KuguAppender appender activated.");
         final Dictionary<String, String> properties = new Hashtable<String, String>();
         properties.put(PaxLoggingService.APPENDER_NAME_PROPERTY, "Kugu");
-        ServiceRegistration m_appenderRegistration = context.registerService(PaxAppender.class.getName(), this,
-                properties);
+        context.registerService(PaxAppender.class.getName(), this, properties);
     }
 
     @Override
     public void doAppend(PaxLoggingEvent event) {
-
-        System.out.println("KuguAppender: " + event.getMessage());
-
-        if (TRACE.name().equals(event.getLevel().toString())) {
-            TRACE_LABEL.inc();
-        } else if (DEBUG.name().equals(event.getLevel().toString())) {
-            DEBUG_LABEL.inc();
-        } else if (INFO.name().equals(event.getLevel().toString())) {
-            INFO_LABEL.inc();
-        } else if (WARN.name().equals(event.getLevel().toString())) {
-            WARN_LABEL.inc();
-        } else if (ERROR.name().equals(event.getLevel().toString())) {
-            ERROR_LABEL.inc();
-        } else if (FATAL.name().equals(event.getLevel().toString())) {
-            FATAL_LABEL.inc();
-        } else {
-            System.out.println("Level: " + event.getLevel().toString());
+        switch (event.getLevel().toString()) {
+            case "TRACE":
+                TRACE_LABEL.inc();
+                break;
+            case "DEBUG":
+                DEBUG_LABEL.inc();
+                break;
+            case "WARN":
+                WARN_LABEL.inc();
+                break;
+            case "ERROR":
+                ERROR_LABEL.inc();
+                break;
+            case "INFO":
+                INFO_LABEL.inc();
+                break;
+            case "FATAL":
+                FATAL_LABEL.inc();
+                break;
         }
     }
 
-    public static final String COUNTER_NAME = "log4j2_appender_total";
+    public static final String COUNTER_NAME = "openhab_logmessage_count";
 
     private static final Counter COUNTER;
     private static final Counter.Child TRACE_LABEL;
@@ -60,8 +58,8 @@ public class KuguAppender implements PaxAppender {
     private static final Counter.Child FATAL_LABEL;
 
     static {
-        COUNTER = Counter.build().name(COUNTER_NAME).help("Log4j2 log statements at various log levels")
-                .labelNames("level").register();
+        COUNTER = Counter.build().name(COUNTER_NAME).help("logmessage count at various log levels").labelNames("level")
+                .register();
 
         TRACE_LABEL = COUNTER.labels("trace");
         DEBUG_LABEL = COUNTER.labels("debug");
