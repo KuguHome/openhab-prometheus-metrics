@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" configuration-pid="binding.openhabprometheusmetrics" name="com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsHandlerFactory">
-   <service>
-      <provide interface="org.osgi.service.event.EventHandler"/>
-      <provide interface="org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory"/>
-   </service>
-   <implementation class="com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsHandlerFactory"/>
-</scr:component>

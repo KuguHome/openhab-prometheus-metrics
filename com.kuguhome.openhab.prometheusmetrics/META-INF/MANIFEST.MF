@@ -8,12 +8,9 @@ Bundle-SymbolicName: com.kuguhome.openhab.prometheusmetrics;singleton:=true
 Bundle-Vendor: openHAB
 Bundle-Version: 2.4.0.qualifier
 Import-Package: 
- ch.qos.logback.classic;version="1.0.7";resolution:=optional,
- ch.qos.logback.classic.spi;version="1.0.7";resolution:=optional,
- ch.qos.logback.core;version="1.0.7";resolution:=optional,
- ch.qos.logback.core.spi;version="1.0.7";resolution:=optional,
  io.prometheus.client;version="0.4.0",
  io.prometheus.client.exporter.common;version="0.4.0",
+ io.prometheus.client.hotspot;version="0.4.0",
  io.swagger.annotations;version="1.5.7.SNAPSHOT",
  javax.annotation.security;version="1.2.0",
  javax.servlet;version="3.1.0",
@@ -21,6 +18,13 @@ Import-Package:
  javax.ws.rs;version="2.0.1",
  javax.ws.rs.core;version="2.0.1",
  org.apache.commons.collections;version="3.2.0",
+ org.apache.logging.log4j;version="2.8.1",
+ org.apache.logging.log4j.core;version="2.8.2",
+ org.apache.logging.log4j.core.appender;version="2.8.2",
+ org.apache.logging.log4j.core.config.plugins;version="2.8.2",
+ org.apache.logging.log4j.core.config.status;version="2.8.2",
+ org.apache.logging.log4j.spi;version="2.8.1",
+ org.apache.logging.log4j.status;version="2.8.1",
  org.eclipse.jdt.annotation;resolution:=optional,
  org.eclipse.smarthome.config.core,
  org.eclipse.smarthome.config.discovery,
@@ -28,6 +32,7 @@ Import-Package:
  org.eclipse.smarthome.config.discovery.inbox,
  org.eclipse.smarthome.config.discovery.inbox.events,
  org.eclipse.smarthome.core.auth,
+ org.eclipse.smarthome.core.common,
  org.eclipse.smarthome.core.common.registry,
  org.eclipse.smarthome.core.events,
  org.eclipse.smarthome.core.items.events,
@@ -49,8 +54,13 @@ Import-Package:
  org.eclipse.smarthome.core.types,
  org.eclipse.smarthome.io.rest,
  org.openhab.ui.dashboard,
+ org.ops4j.pax.logging;version="1.10.1",
+ org.ops4j.pax.logging.avalon;version="1.10.1",
+ org.ops4j.pax.logging.slf4j;version="1.10.1",
+ org.ops4j.pax.logging.spi;version="1.10.1",
  org.osgi.framework,
  org.osgi.framework.launch;version="1.2.0",
+ org.osgi.service.cm;version="1.5.0",
  org.osgi.service.component;version="1.3.0",
  org.osgi.service.component.annotations;version="1.3.0";resolution:=optional,
  org.osgi.service.event;version="1.3.1",
@@ -60,5 +70,7 @@ Service-Component: OSGI-INF/*.xml
 Automatic-Module-Name: com.kuguhome.openhab.prometheusmetrics
 Require-Bundle: system.bundle,
  org.slf4j.log4j;resolution:=optional
+Export-Package: com.kuguhome.openhab.prometheusmetrics.api
+Bundle-Activator: com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsActivator
 
 
