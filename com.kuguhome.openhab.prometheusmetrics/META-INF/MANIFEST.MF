@@ -8,9 +8,9 @@ Bundle-SymbolicName: com.kuguhome.openhab.prometheusmetrics;singleton:=true
 Bundle-Vendor: openHAB
 Bundle-Version: 2.4.0.qualifier
 Import-Package: 
- io.prometheus.client;version="0.4.0",
- io.prometheus.client.exporter.common;version="0.4.0",
- io.prometheus.client.hotspot;version="0.4.0",
+ io.prometheus.client;version="0.5.0",
+ io.prometheus.client.exporter.common;version="0.5.0",
+ io.prometheus.client.hotspot;version="0.5.0",
  io.swagger.annotations;version="1.5.7.SNAPSHOT",
  javax.annotation.security;version="1.2.0",
  javax.servlet;version="3.1.0",
