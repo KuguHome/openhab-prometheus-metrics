@@ -11,5 +11,6 @@
    <reference cardinality="1..1" field="openHABThingStateMetric" interface="com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABThingStateMetric" name="openHABThingStateMetric" policy="dynamic"/>
    <reference cardinality="1..1" field="smarthomeEventCountMetric" interface="com.kuguhome.openhab.prometheusmetrics.exposable.SmarthomeEventCountMetric" name="smarthomeEventCountMetric" policy="dynamic"/>
    <reference cardinality="1..1" field="threadPoolMetric" interface="com.kuguhome.openhab.prometheusmetrics.exposable.ThreadPoolMetric" name="threadPoolMetric" policy="dynamic"/>
+   <reference cardinality="1..1" field="zWaveMetric" interface="com.kuguhome.openhab.prometheusmetrics.exposable.ZWaveMetric" name="zWaveMetric" policy="dynamic"/>
    <implementation class="com.kuguhome.openhab.prometheusmetrics.rest.PrometheusMetricsRESTResource"/>
 </scr:component>
