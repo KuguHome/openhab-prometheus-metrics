@@ -63,7 +63,7 @@ public class ZWaveMetric implements RESTExposable {
      * protected void setZWaveActiveBinding(ZWaveActiveBinding zWaveActiveBinding) {
      * this.zWaveActiveBinding = zWaveActiveBinding;
      * }
-     * 
+     *
      * protected void unsetZWaveActiveBinding() {
      * this.zWaveActiveBinding = null;
      * }

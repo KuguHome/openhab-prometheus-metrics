@@ -72,7 +72,8 @@ Import-Package:
 Service-Component: OSGI-INF/*.xml
 Automatic-Module-Name: com.kuguhome.openhab.prometheusmetrics
 Require-Bundle: system.bundle,
- org.slf4j.log4j;resolution:=optional
+ org.slf4j.log4j;resolution:=optional,
+ org.junit
 Export-Package: com.kuguhome.openhab.prometheusmetrics.api
 Bundle-Activator: com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsActivator
 

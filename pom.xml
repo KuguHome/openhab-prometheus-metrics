@@ -45,6 +45,9 @@
 				<artifactId>tycho-maven-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
+                		<configuration>
+                    			<strictVersions>false</strictVersions>
+                		</configuration>
 			</plugin>
 
 			<!-- https://wiki.eclipse.org/Tycho/Reference_Card#Source_Bundles -->
