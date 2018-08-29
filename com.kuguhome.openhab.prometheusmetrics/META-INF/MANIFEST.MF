@@ -8,6 +8,7 @@ Bundle-SymbolicName: com.kuguhome.openhab.prometheusmetrics;singleton:=true
 Bundle-Vendor: openHAB
 Bundle-Version: 2.4.0.qualifier
 Import-Package: 
+ com.google.common.io;version="15.0.0",
  io.prometheus.client;version="0.5.0",
  io.prometheus.client.exporter.common;version="0.5.0",
  io.prometheus.client.hotspot;version="0.5.0",
