@@ -86,12 +86,16 @@ public class KuguAppender implements PaxAppender {
     }
 
     private static final Counter openhab_zwave_discarded_messages_count = Counter.build()
-            .name("openhab_zwave_discarded_messages_count").labelNames("node").register();
+            .name("openhab_zwave_discarded_messages_count").help("openhab_zwave_discarded_messages_count")
+            .labelNames("node").register();
     private static final Counter openhab_zwave_transaction_mismatch_count = Counter.build()
-            .name("openhab_zwave_transaction_mismatch_count").register();
+            .help("openhab_zwave_transaction_mismatch_count").name("openhab_zwave_transaction_mismatch_count")
+            .register();
     private static final Counter openhab_zwave_node_address_inconsistent_counter = Counter.build()
+            .help("openhab_zwave_node_address_inconsistent_counter")
             .name("openhab_zwave_node_address_inconsistent_counter").labelNames("node").register();
     private static final Counter openhab_zwave_timeout_while_sending_message_counter = Counter.build()
+            .help("openhab_zwave_timeout_while_sending_message_counter")
             .name("openhab_zwave_timeout_while_sending_message_counter").labelNames("node").register();
 
     private static final Gauge global_send_queue = Gauge.build("global_send_queue", "global_send_queue")

@@ -50,6 +50,7 @@ Import-Package:
  org.eclipse.smarthome.core.thing.util,
  org.eclipse.smarthome.core.types,
  org.eclipse.smarthome.io.rest,
+ org.junit;version="4.12.0";resolution:=optional,
  org.openhab.core.binding,
  org.openhab.ui.dashboard,
  org.ops4j.pax.logging;version="1.10.1",
@@ -67,8 +68,7 @@ Import-Package:
 Service-Component: OSGI-INF/*.xml
 Automatic-Module-Name: com.kuguhome.openhab.prometheusmetrics
 Require-Bundle: system.bundle,
- org.slf4j.log4j;resolution:=optional,
- org.junit
+ org.slf4j.log4j;resolution:=optional
 Export-Package: com.kuguhome.openhab.prometheusmetrics.api
 Bundle-Activator: com.kuguhome.openhab.prometheusmetrics.internal.PrometheusMetricsActivator
 
