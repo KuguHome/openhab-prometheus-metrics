@@ -42,7 +42,6 @@ import com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABBundleStateMetric
 import com.kuguhome.openhab.prometheusmetrics.exposable.OpenHABThingStateMetric;
 import com.kuguhome.openhab.prometheusmetrics.exposable.SmarthomeEventCountMetric;
 import com.kuguhome.openhab.prometheusmetrics.exposable.ThreadPoolMetric;
-import com.kuguhome.openhab.prometheusmetrics.exposable.ZWaveMetric;
 
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.exporter.common.TextFormat;
@@ -98,7 +97,6 @@ public class PrometheusMetricsRESTResource implements RESTResource {
         metricManager.registerMetric(smarthomeEventCountMetric);
         metricManager.registerMetric(openHABThingStateMetric);
         metricManager.registerMetric(inboxCountMetric);
-        metricManager.registerMetric(zWaveMetric);
 
         try {
             httpService.registerResources(METRICS_ALIAS, "web", null);
@@ -131,8 +129,5 @@ public class PrometheusMetricsRESTResource implements RESTResource {
 
     @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
     volatile protected ThreadPoolMetric threadPoolMetric;
-
-    @Reference(cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC)
-    volatile protected ZWaveMetric zWaveMetric;
 
 }

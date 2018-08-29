@@ -4,6 +4,7 @@ import static org.apache.logging.log4j.Level.*;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,26 +23,67 @@ import io.prometheus.client.Gauge;
 @Component(service = { PaxAppender.class })
 public class KuguAppender implements PaxAppender {
 
-    private Pattern nodePattern = Pattern.compile("\\b(\\w*NODE\\w*\\s\\d)\\b");
-    private Pattern queuePattern = Pattern.compile("\\b(\\w*Queue\\slength\\s=\\w*\\s\\d*)\\b");
+    public static class ParseUtil {
+        private Pattern nodePattern = Pattern.compile("\\b(\\w*NODE\\w*\\s\\d+)\\b");
+        private Pattern queuePattern = Pattern.compile("\\b(\\w*Queue\\slength\\s=\\w*\\s\\d*)\\b");
 
-    private Pattern numberPattern = Pattern.compile("\\b(\\d+)\\b");
+        private Pattern numberPattern = Pattern.compile("\\b(\\d+)\\b");
 
-    private Pattern nodeAddressInconsistentPattern = Pattern.compile("\\b(\\w*node\\saddress\\sinconsistent\\w*)\\b");
+        private Pattern nodeAddressInconsistentPattern = Pattern.compile(
+                "\\b(\\w*NODE\\s\\d+\\:\\sTransaction\\snot\\scompleted\\:\\snode\\saddress\\sinconsistent\\w*)\\b");
 
-    private Pattern discardedMessagesPattern = Pattern
-            .compile("\\b(\\w*Too\\smany\\sretries.\\sDiscarding message\\w*)\\b");
+        private Pattern discardedMessagesPattern = Pattern
+                .compile("\\b(\\w*Too\\smany\\sretries.\\sDiscarding message\\w*)\\b");
 
-    private Pattern timeoutWhileSendingMessagePattern = Pattern
-            .compile("\\b(\\w*Timeout\\swhile\\ssending\\smessage\\.\\sRequeueing\\w*)\\b");
+        private Pattern timeoutWhileSendingMessagePattern = Pattern
+                .compile("\\b(\\w*NODE\\s\\d+\\:\\sTimeout\\swhile\\ssending\\smessage\\.\\sRequeueing\\w*)\\b");
 
-    private Pattern transactionMismatchPattern = Pattern.compile("\\b(\\w*MISMATCH\\w*)\\b");
+        private Pattern transactionMismatchPattern = Pattern.compile("\\b(\\w*MISMATCH\\w*)\\b");
 
-    private Pattern globalSendQueuePattern = Pattern
-            .compile("\\b(\\w*Took\\smessage\\sfrom\\squeue\\sfor\\ssending\\w*)\\b");
+        private Pattern globalSendQueuePattern = Pattern.compile(
+                "\\b(\\w*Took\\smessage\\sfrom\\squeue\\sfor\\ssending\\.\\sQueue\\slength\\s=\\s\\d+\\w*)\\b");
 
-    private Pattern wakeUpQueuePattern = Pattern
-            .compile("\\b(\\w*Is\\sawake\\swith\\s\\d+\\smessages\\sin\\sthe\\swake-up\\squeue\\w*)\\b");
+        private Pattern wakeUpQueuePattern = Pattern
+                .compile("\\b(\\w*Is\\sawake\\swith\\s\\d+\\smessages\\sin\\sthe\\swake-up\\squeue\\w*)\\b");
+
+        BiFunction<String, Pattern, String> extract = (s, p) -> {
+            Matcher m = p.matcher(s);
+            if (m.find()) {
+                return m.group(1);
+            }
+            return "";
+        };
+
+        public String getNodeNumber(String logMessage) {
+            return extract.apply(extract.apply(logMessage, nodePattern), numberPattern);
+        }
+
+        public String getWakeUpQueue(String logMessage) {
+            return extract.apply(extract.apply(logMessage, wakeUpQueuePattern), numberPattern);
+        }
+
+        public String getNodeAddressInconsistent(String logMessage) {
+            return getNodeNumber(extract.apply(logMessage, nodeAddressInconsistentPattern));
+        }
+
+        public String getQueueLength(String logMessage) {
+            return extract.apply(extract.apply(extract.apply(logMessage, globalSendQueuePattern), queuePattern),
+                    numberPattern);
+        }
+
+        public boolean isTransactionMismatch(String logMessage) {
+            String x = extract.apply(logMessage, transactionMismatchPattern);
+            return x.isEmpty() ? false : true;
+        }
+
+        public String getTimeoutWhileSending(String logMessage) {
+            return getNodeNumber(extract.apply(logMessage, timeoutWhileSendingMessagePattern));
+        }
+
+        public String getDiscarded(String logMessage) {
+            return getNodeNumber(extract.apply(logMessage, discardedMessagesPattern));
+        }
+    }
 
     private static final Counter openhab_zwave_discarded_messages_count = Counter.build()
             .name("openhab_zwave_discarded_messages_count").labelNames("node").register();
@@ -67,26 +109,19 @@ public class KuguAppender implements PaxAppender {
     @Override
     public void doAppend(PaxLoggingEvent event) {
         String logMessage = event.getMessage();
+        ParseUtil parseUtil = new ParseUtil();
+
         {
-            Matcher discardedMessagesMatcher = discardedMessagesPattern.matcher(logMessage);
-            if (discardedMessagesMatcher.find()) {
-                Matcher nodeMatcher = nodePattern.matcher(logMessage);
-                if (nodeMatcher.find()) {
-                    String node = nodeMatcher.group(1);
-                    Matcher digitsMatcher = numberPattern.matcher(node);
-                    if (digitsMatcher.find()) {
-                        String nodeNumber = digitsMatcher.group(1);
-                        Child child = new Child();
-                        child.inc();
-                        openhab_zwave_discarded_messages_count.setChild(child, nodeNumber);
-                    }
-                }
+            String node = parseUtil.getDiscarded(logMessage);
+            if (!node.isEmpty()) {
+                Child child = new Child();
+                child.inc();
+                openhab_zwave_discarded_messages_count.setChild(child, node);
             }
         }
 
         {
-            Matcher transactionMismatchMatcher = transactionMismatchPattern.matcher(logMessage);
-            if (transactionMismatchMatcher.find()) {
+            if (parseUtil.isTransactionMismatch(logMessage)) {
                 Child child = new Child();
                 child.inc();
                 openhab_zwave_transaction_mismatch_count.setChild(child);
@@ -94,75 +129,37 @@ public class KuguAppender implements PaxAppender {
         }
 
         {
-            Matcher nodeAddressInconsistentMatcher = nodeAddressInconsistentPattern.matcher(logMessage);
-            if (nodeAddressInconsistentMatcher.find()) {
-                Matcher nodeMatcher = nodePattern.matcher(logMessage);
-                if (nodeMatcher.find()) {
-                    String node = nodeMatcher.group(1);
-                    Matcher digitsMatcher = numberPattern.matcher(node);
-                    if (digitsMatcher.find()) {
-                        String nodeNumber = digitsMatcher.group(1);
-                        Child child = new Child();
-                        child.inc();
-                        openhab_zwave_node_address_inconsistent_counter.setChild(child, nodeNumber);
-                    }
-                }
+            String length = parseUtil.getQueueLength(logMessage);
+            if (!length.isEmpty()) {
+                Gauge.Child child = new Gauge.Child();
+                child.set(Double.parseDouble(length));
+                global_send_queue.setChild(child);
             }
         }
-
         {
-            Matcher globalSendQueueMatcher = globalSendQueuePattern.matcher(logMessage);
-            if (globalSendQueueMatcher.find()) {
-                Matcher queueMatcher = queuePattern.matcher(logMessage);
-                if (queueMatcher.find()) {
-                    String queueLength = queueMatcher.group(1);
-                    Matcher digitsMatcher = numberPattern.matcher(queueLength);
-                    if (digitsMatcher.find()) {
-                        String length = digitsMatcher.group(1);
-                        Gauge.Child child = new Gauge.Child();
-                        child.set(Double.parseDouble(length));
-                        global_send_queue.setChild(child);
-                    }
-                }
+            String node = parseUtil.getNodeNumber(logMessage);
+            if (!node.isEmpty()) {
+                Child child = new Child();
+                child.inc();
+                openhab_zwave_node_address_inconsistent_counter.setChild(child, node);
             }
         }
-
         {
-            Matcher wakeUpQueueMatcher = wakeUpQueuePattern.matcher(logMessage);
-            if (wakeUpQueueMatcher.find()) {
-                String wakeUpQueueMessage = wakeUpQueueMatcher.group(1);
-                Matcher nodeMatcher = nodePattern.matcher(logMessage);
-                if (nodeMatcher.find()) {
-                    String node = nodeMatcher.group(1);
-                    Matcher digitsMatcher = numberPattern.matcher(node);
-                    if (digitsMatcher.find()) {
-                        String nodeN = digitsMatcher.group(1);
-                        digitsMatcher = numberPattern.matcher(wakeUpQueueMessage);
-                        if (digitsMatcher.find()) {
-                            String length = digitsMatcher.group(1);
-                            Gauge.Child child = new Gauge.Child();
-                            child.set(Double.parseDouble(length));
-                            wake_up_queue.setChild(child, nodeN);
-                        }
-                    }
-                }
+            String parsed = parseUtil.getWakeUpQueue(logMessage);
+            String node = parseUtil.getNodeNumber(logMessage);
+            if (!parsed.isEmpty() && !node.isEmpty()) {
+                Gauge.Child child = new Gauge.Child();
+                child.set(Double.parseDouble(parsed));
+                wake_up_queue.setChild(child, node);
             }
         }
-
         {
-            Matcher timeoutWhileSendingMessageMatcher = timeoutWhileSendingMessagePattern.matcher(logMessage);
-            if (timeoutWhileSendingMessageMatcher.find()) {
-                Matcher nodeMatcher = nodePattern.matcher(logMessage);
-                if (nodeMatcher.find()) {
-                    String node = nodeMatcher.group(1);
-                    Matcher digitsMatcher = numberPattern.matcher(node);
-                    if (digitsMatcher.find()) {
-                        String nodeNumber = digitsMatcher.group(1);
-                        Child child = new Child();
-                        child.inc();
-                        openhab_zwave_timeout_while_sending_message_counter.setChild(child, nodeNumber);
-                    }
-                }
+            String parsed = parseUtil.getTimeoutWhileSending(logMessage);
+            String node = parseUtil.getNodeNumber(logMessage);
+            if (!parsed.isEmpty() && !node.isEmpty()) {
+                Child child = new Child();
+                child.inc();
+                openhab_zwave_timeout_while_sending_message_counter.setChild(child, node);
             }
         }
 
