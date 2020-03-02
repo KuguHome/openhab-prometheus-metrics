@@ -22,13 +22,6 @@ variables:
 cache:
   paths:
     - .m2/repository
-    - com.kuguhome.openhab.prometheusmetrics.p2site/.m2/repository
-    - com.kuguhome.openhab.prometheusmetrics.p2site/target
-
-before_script:
-  - cd com.kuguhome.openhab.prometheusmetrics.p2site
-  - 'mvn $MAVEN_CLI_OPTS p2:site'
-  - cd ..
 
 build:
   script:
@@ -37,5 +30,3 @@ build:
     paths:
     - com.kuguhome.openhab.prometheusmetrics/target/*.jar
   image: maven:3.5-jdk-8
-
-
